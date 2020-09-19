@@ -43,4 +43,4 @@ object-assign
 `,s=l.a.div`
   flex: 1;
 `,f=l.a.div`
-`;var d=()=>i.a.createElement(u,null,i.a.createElement(c,null,"Header"),i.a.createElement(s,null,"CI TEST"),i.a.createElement(f,null,"Footer"));n(17);a.a.render(i.a.createElement(d,null),document.querySelector("#root"))}]);
+`;var d=()=>i.a.createElement(u,null,i.a.createElement(c,null,"Header"),i.a.createElement(s,null,"Content"),i.a.createElement(f,null,"Footer"));n(17);a.a.render(i.a.createElement(d,null),document.querySelector("#root"))}]);
