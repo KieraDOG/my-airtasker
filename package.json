@@ -1,6 +1,7 @@
 {
   "name": "my-airtasker",
   "description": "JR Project #3",
+  "homepage": "https://kieradog.github.io/my-airtasker",
   "scripts": {
     "start": "webpack-dev-server",
     "start:development": "npm run start -- --mode development",
