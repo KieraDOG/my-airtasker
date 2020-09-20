@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Navigation from './components/Navigation';
-import Authentication from './components/Authentication';
+import Public from './components/Public';
+import Private from './components/Private';
 
 const StyledHeader = styled.div`
   border-bottom: 1px solid #dadada;
@@ -28,10 +28,10 @@ const Header = () => (
     <Container>
       <Layout>
         <Left>
-          <Navigation />
+          <Public />
         </Left>
         <Right>
-          <Authentication />
+          <Private />
         </Right>
       </Layout>
     </Container>

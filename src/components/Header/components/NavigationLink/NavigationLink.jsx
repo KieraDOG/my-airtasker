@@ -1,11 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
+import NavigationItem from '../NavigationItem';
 
-const Link = styled.a`
+const StyledLink = styled.a`
   text-decoration: none;
-  padding: 16px;
 `;
+
+const Link = ({
+  children,
+}) => (
+  <NavigationItem>
+    <StyledLink>{children}</StyledLink>
+  </NavigationItem>
+);
+
+Link.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 const NavigationLink = {};
 
@@ -22,11 +34,7 @@ NavigationLink.Naked.propTypes = {
 };
 
 const Text = styled.span`
-  color: #545a77;
-  
-  &:hover {
-    color: #008fb4;
-  }
+  color: inherit;
 `;
 
 NavigationLink.Text = ({

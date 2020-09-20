@@ -15,7 +15,7 @@ const Logo = styled.span`
   color: #008fb4;
 `;
 
-const Navigation = () => (
+const Public = () => (
   <Layout>
     <NavigationLink.Naked href="/">
       <Logo>LOGO</Logo>
@@ -36,4 +36,4 @@ const Navigation = () => (
   </Layout>
 );
 
-export default Navigation;
+export default Public;

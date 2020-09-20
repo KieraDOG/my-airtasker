@@ -41,3 +41,10 @@ Daily standup meeting
 - 汇报昨天一天的工作进度，和今天一天的工作预期
 衍生出
 - 任务要小，要容易完成。要让组员有幸福感，有成就感。
+
+简单的重复要优于复杂的抽象
+Over Engineering
+
+A. Modal (Context)
+B. Dropdown
+C. Router
