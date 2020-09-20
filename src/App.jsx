@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Header from './components/Header';
 
 const Layout = styled.div`
   display: flex;
@@ -7,20 +8,20 @@ const Layout = styled.div`
   min-height: 100vh;
 `;
 
-const HeaderWrapper = styled.div`
+const HeaderWrapper = styled.section`
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.section`
   flex: 1;
 `;
 
-const FooterWrapper = styled.div`
+const FooterWrapper = styled.section`
 `;
 
 const App = () => (
   <Layout>
     <HeaderWrapper>
-      Header
+      <Header />
     </HeaderWrapper>
     <ContentWrapper>
       Content
