@@ -24,13 +24,13 @@ const Public = () => (
     <NavigationLink.Button variant="primary" href="/post-a-task">
       Post a task
     </NavigationLink.Button>
-    <NavigationLink.Text href="/categories">
+    <NavigationLink.Text indictable href="/categories">
       Categories
     </NavigationLink.Text>
-    <NavigationLink.Text href="/browse-tasks">
+    <NavigationLink.Text indictable href="/browse-tasks">
       Browse tasks
     </NavigationLink.Text>
-    <NavigationLink.Text href="/how-it-works">
+    <NavigationLink.Text indictable href="/how-it-works">
       How it works
     </NavigationLink.Text>
   </Layout>

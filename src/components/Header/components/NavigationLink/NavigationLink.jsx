@@ -8,53 +8,50 @@ const StyledLink = styled.a`
 `;
 
 const Link = ({
+  href,
   children,
+  className,
+  indictable,
 }) => (
-  <NavigationItem>
-    <StyledLink>{children}</StyledLink>
+  <NavigationItem
+    as={StyledLink}
+    indictable={indictable}
+    href={href}
+    className={className}
+  >
+    {children}
   </NavigationItem>
 );
 
+Link.defaultProps = {
+  className: '',
+  indictable: false,
+};
+
 Link.propTypes = {
+  href: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  indictable: PropTypes.bool,
 };
 
 const NavigationLink = {};
 
-NavigationLink.Naked = ({
-  href,
-  children,
-}) => (
-  <Link href={href}>{children}</Link>
-);
+NavigationLink.Naked = Link;
 
-NavigationLink.Naked.propTypes = {
-  href: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
+NavigationLink.Text = styled(Link)`
+  color: #545a77;
 
-const Text = styled.span`
-  color: inherit;
+  &:hover {
+    color: #008fb4;
+  }
 `;
 
-NavigationLink.Text = ({
-  href,
-  children,
-}) => (
-  <Link href={href}>
-    <Text>{children}</Text>
-  </Link>
-);
-
-NavigationLink.Text.propTypes = {
-  href: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
-
-const Button = styled.span`
-  border-radius: 200px;
-  font-size: 14px;
+NavigationLink.Button = styled(StyledLink)`
+  margin: 8px 16px;
   padding: 8px 18px;
+  font-size: 14px;
+  border-radius: 200px;
 
   ${(props) => {
     const style = {
@@ -71,21 +68,5 @@ const Button = styled.span`
     return style;
   }}
 `;
-
-NavigationLink.Button = ({
-  href,
-  variant,
-  children,
-}) => (
-  <Link href={href}>
-    <Button variant={variant}>{children}</Button>
-  </Link>
-);
-
-NavigationLink.Button.propTypes = {
-  href: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['primary', 'secondary']).isRequired,
-  children: PropTypes.node.isRequired,
-};
 
 export default NavigationLink;

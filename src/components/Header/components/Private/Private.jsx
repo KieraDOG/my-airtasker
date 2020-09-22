@@ -60,7 +60,7 @@ class Private extends React.Component {
             onSignUp={this.showModal(MODAL.SIGN_UP)}
           />
         )}
-        {showModal === MODAL.SIGN_IN && (
+        {showModal === MODAL.SIGN_UP && (
           <div>SignUp</div>
         )}
       </>

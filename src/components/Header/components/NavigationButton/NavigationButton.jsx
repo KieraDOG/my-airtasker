@@ -1,17 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import NavigationLink from '../NavigationLink';
 import NavigationItem from '../NavigationItem';
 
 const Button = styled.button`
   outline: 0;
   border: 0;
   background: transparent;
-  text-align: left;
-  font-size: 16px;
   padding: 0;
   cursor: pointer;
-  color: inherit;
 `;
 
 const NavigationButton = ({
@@ -19,7 +17,9 @@ const NavigationButton = ({
   children,
 }) => (
   <NavigationItem>
-    <Button onClick={onClick}>{children}</Button>
+    <NavigationLink.Text as={Button} onClick={onClick}>
+      {children}
+    </NavigationLink.Text>
   </NavigationItem>
 );
 
