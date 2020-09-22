@@ -48,6 +48,9 @@ NavigationLink.Text = styled(Link)`
 `;
 
 NavigationLink.Button = styled(StyledLink)`
+  outline: 0;
+  border: 0;
+  cursor: pointer;
   margin: 8px 16px;
   padding: 8px 18px;
   font-size: 14px;

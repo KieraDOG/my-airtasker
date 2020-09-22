@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import NavigationButton from '../NavigationButton';
 import NavigationLink from '../NavigationLink';
 import SignInModal from './components/SignInModal';
+import SignUpModal from './components/SignUpModal';
 
 const Layout = styled.div`
   display: flex;
@@ -11,7 +12,7 @@ const Layout = styled.div`
 const MODAL = {
   SIGN_IN: 'SIGN_IN',
   SIGN_UP: 'SIGN_UP',
-  EMPTY: '',
+  EMPTY: null,
 };
 
 class Private extends React.Component {
@@ -19,9 +20,6 @@ class Private extends React.Component {
     super(props);
 
     this.state = {
-      // showSignInModal: false,
-      // showSignUpModal: false,
-      // showForgetPasswordModal: false,
       showModal: MODAL.EMPTY,
     };
 
@@ -44,12 +42,12 @@ class Private extends React.Component {
     return (
       <>
         <Layout>
-          <NavigationButton onClick={this.showModal(MODAL.SIGN_IN)}>
+          <NavigationButton.Text onClick={this.showModal(MODAL.SIGN_IN)}>
             Sign in
-          </NavigationButton>
-          <NavigationButton onClick={this.showModal(MODAL.SIGN_UP)}>
+          </NavigationButton.Text>
+          <NavigationButton.Text onClick={this.showModal(MODAL.SIGN_UP)}>
             Sign up
-          </NavigationButton>
+          </NavigationButton.Text>
           <NavigationLink.Button variant="secondary" href="/enroll">
             Become a Tasker
           </NavigationLink.Button>
@@ -61,7 +59,10 @@ class Private extends React.Component {
           />
         )}
         {showModal === MODAL.SIGN_UP && (
-          <div>SignUp</div>
+          <SignUpModal
+            onClose={this.showModal(MODAL.EMPTY)}
+            onSignIn={this.showModal(MODAL.SIGN_IN)}
+          />
         )}
       </>
     );
