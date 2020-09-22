@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import NavigationLink from '../NavigationLink';
 import NavigationButton from '../NavigationButton';
-import PostATaskModal from './components/PostATaskModal/PostATaskModal';
+import PostATaskModal from './components/PostATaskModal';
+import CategoriesDropdown from './components/CategoriesDropdown';
 
 const Layout = styled.div`
   display: flex;
@@ -23,9 +24,11 @@ class Public extends React.Component {
 
     this.state = {
       showPostATaskModal: false,
+      showCategoriesDropdown: false,
     };
 
     this.togglePostATaskModal = this.togglePostATaskModal.bind(this);
+    this.toggleCategoriesDropdown = this.toggleCategoriesDropdown.bind(this);
   }
 
   togglePostATaskModal(event) {
@@ -33,6 +36,14 @@ class Public extends React.Component {
 
     this.setState((prevState) => ({
       showPostATaskModal: !prevState.showPostATaskModal,
+    }));
+  }
+
+  toggleCategoriesDropdown(event) {
+    event.preventDefault();
+
+    this.setState((prevState) => ({
+      showCategoriesDropdown: !prevState.showCategoriesDropdown,
     }));
   }
 
@@ -55,9 +66,7 @@ class Public extends React.Component {
         {showPostATaskModal && (
           <PostATaskModal onClose={this.togglePostATaskModal} />
         )}
-        <NavigationLink.Text indictable href="/categories">
-          Categories
-        </NavigationLink.Text>
+        <CategoriesDropdown />
         <NavigationLink.Text indictable href="/browse-tasks">
           Browse tasks
         </NavigationLink.Text>

@@ -7,17 +7,23 @@ import NakedButton from '../../../NakedButton';
 const NavigationButton = {};
 
 NavigationButton.Text = ({
+  indictable,
   onClick,
   children,
 }) => (
-  <NavigationItem>
+  <NavigationItem indictable={indictable}>
     <NavigationLink.Text as={NakedButton} onClick={onClick}>
       {children}
     </NavigationLink.Text>
   </NavigationItem>
 );
 
+NavigationButton.Text.defaultProps = {
+  indictable: false,
+};
+
 NavigationButton.Text.propTypes = {
+  indictable: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
 };
