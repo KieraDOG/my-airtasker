@@ -4,6 +4,7 @@ import NavigationLink from '../NavigationLink';
 import NavigationButton from '../NavigationButton';
 import PostATaskModal from './components/PostATaskModal';
 import CategoriesDropdown from './components/CategoriesDropdown';
+import ToggleContent from '../../../ToggleContent';
 
 const Layout = styled.div`
   display: flex;
@@ -18,64 +19,34 @@ const Logo = styled.span`
   color: #008fb4;
 `;
 
-class Public extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showPostATaskModal: false,
-      showCategoriesDropdown: false,
-    };
-
-    this.togglePostATaskModal = this.togglePostATaskModal.bind(this);
-    this.toggleCategoriesDropdown = this.toggleCategoriesDropdown.bind(this);
-  }
-
-  togglePostATaskModal(event) {
-    event.preventDefault();
-
-    this.setState((prevState) => ({
-      showPostATaskModal: !prevState.showPostATaskModal,
-    }));
-  }
-
-  toggleCategoriesDropdown(event) {
-    event.preventDefault();
-
-    this.setState((prevState) => ({
-      showCategoriesDropdown: !prevState.showCategoriesDropdown,
-    }));
-  }
-
-  render() {
-    const { showPostATaskModal } = this.state;
-
-    return (
-      <Layout>
-        <NavigationLink.Naked href="/">
-          <Logo>LOGO</Logo>
-        </NavigationLink.Naked>
-        <Divider />
+const Public = () => (
+  <Layout>
+    <NavigationLink.Naked href="/">
+      <Logo>LOGO</Logo>
+    </NavigationLink.Naked>
+    <Divider />
+    <ToggleContent
+      toggle={(toggler) => (
         <NavigationButton.Button
           variant="primary"
           href="/post-a-task"
-          onClick={this.togglePostATaskModal}
+          onClick={toggler}
         >
           Post a task
         </NavigationButton.Button>
-        {showPostATaskModal && (
-          <PostATaskModal onClose={this.togglePostATaskModal} />
-        )}
-        <CategoriesDropdown />
-        <NavigationLink.Text indictable href="/browse-tasks">
-          Browse tasks
-        </NavigationLink.Text>
-        <NavigationLink.Text indictable href="/how-it-works">
-          How it works
-        </NavigationLink.Text>
-      </Layout>
-    );
-  }
-}
+      )}
+      content={(toggler) => (
+        <PostATaskModal onClose={toggler} />
+      )}
+    />
+    <CategoriesDropdown />
+    <NavigationLink.Text indictable href="/browse-tasks">
+      Browse tasks
+    </NavigationLink.Text>
+    <NavigationLink.Text indictable href="/how-it-works">
+      How it works
+    </NavigationLink.Text>
+  </Layout>
+);
 
 export default Public;
