@@ -1,6 +1,7 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
+import Button from '../../../Button';
 import NavigationItem from '../NavigationItem';
 
 const StyledLink = styled.a`
@@ -47,29 +48,33 @@ NavigationLink.Text = styled(Link)`
   }
 `;
 
-NavigationLink.Button = styled(StyledLink)`
-  outline: 0;
-  border: 0;
-  cursor: pointer;
+const StyledButton = styled(Button)`
   margin: 8px 16px;
-  padding: 8px 18px;
-  font-size: 14px;
-  border-radius: 200px;
-
-  ${(props) => {
-    const style = {
-      primary: css`
-        background: #e0446d;
-        color: white;
-      `,
-      secondary: css`
-        background: #f5f8fd;
-        color: #008fb4;
-      `,
-    }[props.variant];
-
-    return style;
-  }}
 `;
+
+NavigationLink.Button = ({
+  href,
+  children,
+  variant,
+}) => (
+  <StyledButton
+    size="small"
+    as={StyledLink}
+    href={href}
+    variant={variant}
+  >
+    {children}
+  </StyledButton>
+);
+
+NavigationLink.Button.defaultProps = {
+  variant: 'primary',
+};
+
+NavigationLink.Button.propTypes = {
+  href: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary']),
+};
 
 export default NavigationLink;

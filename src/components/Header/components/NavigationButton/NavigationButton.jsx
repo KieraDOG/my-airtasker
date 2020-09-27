@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import NavigationLink from '../NavigationLink';
 import NavigationItem from '../NavigationItem';
 import NakedButton from '../../../NakedButton';
+import Button from '../../../Button';
 
 const NavigationButton = {};
 
@@ -28,22 +30,32 @@ NavigationButton.Text.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+const StyledButton = styled(Button)`
+  margin: 8px 16px;
+`;
+
 NavigationButton.Button = ({
   onClick,
   children,
+  variant,
 }) => (
-  <NavigationLink.Button
-    as="button"
-    variant="primary"
+  <StyledButton
+    size="small"
+    variant={variant}
     onClick={onClick}
   >
     {children}
-  </NavigationLink.Button>
+  </StyledButton>
 );
+
+NavigationButton.Button.defaultProps = {
+  variant: 'primary',
+};
 
 NavigationButton.Button.propTypes = {
   onClick: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary']),
 };
 
 export default NavigationButton;
