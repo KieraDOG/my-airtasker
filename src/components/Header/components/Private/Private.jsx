@@ -23,14 +23,24 @@ class Private extends React.Component {
 
     this.state = {
       showModal: MODAL.EMPTY,
+      user: null,
     };
 
     this.showModal = this.showModal.bind(this);
+    this.setUser = this.setUser.bind(this);
+  }
+
+  setUser(target) {
+    this.setState({
+      user: target,
+    });
   }
 
   showModal(target) {
     return (event) => {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
 
       this.setState({
         showModal: target,
@@ -39,33 +49,42 @@ class Private extends React.Component {
   }
 
   render() {
-    const { showModal } = this.state;
+    const { showModal, user } = this.state;
 
     return (
       <>
         <Layout>
-          <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
-            Sign in
-          </NavigationLink>
-          <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_UP)}>
-            Sign up
-          </NavigationLink>
+          {user ? (
+            <NavigationLink href="/dashboard">Dashboard</NavigationLink>
+          ) : (
+            <>
+              <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
+                Sign in
+              </NavigationLink>
+              <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_UP)}>
+                Sign up
+              </NavigationLink>
+              {showModal === MODAL.SIGN_IN && (
+                <SignInModal
+                  onClose={this.showModal(MODAL.EMPTY)}
+                  onSignUp={this.showModal(MODAL.SIGN_UP)}
+                  onSignInSuccess={this.setUser}
+                />
+              )}
+
+              {showModal === MODAL.SIGN_UP && (
+                <SignUpModal
+                  onClose={this.showModal(MODAL.EMPTY)}
+                  onSignIn={this.showModal(MODAL.SIGN_IN)}
+                  onSignUpSuccess={this.setUser}
+                />
+              )}
+            </>
+          )}
           <NavigationButton as={Link} variant="secondary" href="/enroll">
             Become a Tasker
           </NavigationButton>
         </Layout>
-        {showModal === MODAL.SIGN_IN && (
-          <SignInModal
-            onClose={this.showModal(MODAL.EMPTY)}
-            onSignUp={this.showModal(MODAL.SIGN_UP)}
-          />
-        )}
-        {showModal === MODAL.SIGN_UP && (
-          <SignUpModal
-            onClose={this.showModal(MODAL.EMPTY)}
-            onSignIn={this.showModal(MODAL.SIGN_IN)}
-          />
-        )}
       </>
     );
   }

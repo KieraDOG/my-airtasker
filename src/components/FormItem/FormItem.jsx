@@ -32,7 +32,11 @@ const FormItem = ({
   errorMessage,
 }) => (
   <Wrapper>
-    {label && (<Label error={errorMessage} htmlFor={htmlFor}>{label}</Label>)}
+    {label && (
+      <Label error={errorMessage} htmlFor={htmlFor}>
+        {label}
+      </Label>
+    )}
     {children}
     {errorMessage && (<ErrorMessage>{errorMessage}</ErrorMessage>)}
   </Wrapper>
