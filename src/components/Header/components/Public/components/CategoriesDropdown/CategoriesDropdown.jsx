@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import NavigationLink from '../../../NavigationLink';
-import NavigationItem from '../../../NavigationItem';
 
 const Wrapper = styled.div`
   position: relative;
   cursor: initial;
 `;
 
-const CursorWrapper = styled(NavigationItem)`
+const CursorWrapper = styled.div`
+  margin: 16px;
   cursor: pointer;
 `;
 
@@ -69,14 +69,9 @@ class CategoriesDropdown extends React.Component {
         onMouseEnter={this.toggleMenu}
         onMouseLeave={this.toggleMenu}
       >
-        <CursorWrapper indictable>
-          <NavigationLink.Text
-            as="span"
-            indictable
-          >
-            Categories
-          </NavigationLink.Text>
-        </CursorWrapper>
+        <NavigationLink as={CursorWrapper} indictable>
+          Categories
+        </NavigationLink>
         {show && (
           <Menu>
             <Left>

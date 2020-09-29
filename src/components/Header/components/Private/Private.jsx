@@ -4,6 +4,8 @@ import NavigationButton from '../NavigationButton';
 import NavigationLink from '../NavigationLink';
 import SignInModal from './components/SignInModal';
 import SignUpModal from './components/SignUpModal';
+import NakedButton from '../../../NakedButton';
+import Link from '../../../Link';
 
 const Layout = styled.div`
   display: flex;
@@ -42,15 +44,15 @@ class Private extends React.Component {
     return (
       <>
         <Layout>
-          <NavigationButton.Text onClick={this.showModal(MODAL.SIGN_IN)}>
+          <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
             Sign in
-          </NavigationButton.Text>
-          <NavigationButton.Text onClick={this.showModal(MODAL.SIGN_UP)}>
+          </NavigationLink>
+          <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_UP)}>
             Sign up
-          </NavigationButton.Text>
-          <NavigationLink.Button variant="secondary" href="/enroll">
+          </NavigationLink>
+          <NavigationButton as={Link} variant="secondary" href="/enroll">
             Become a Tasker
-          </NavigationLink.Button>
+          </NavigationButton>
         </Layout>
         {showModal === MODAL.SIGN_IN && (
           <SignInModal

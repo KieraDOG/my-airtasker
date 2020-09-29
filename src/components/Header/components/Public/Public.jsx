@@ -21,31 +21,31 @@ const Logo = styled.span`
 
 const Public = () => (
   <Layout>
-    <NavigationLink.Naked href="/">
+    <NavigationLink href="/">
       <Logo>LOGO</Logo>
-    </NavigationLink.Naked>
+    </NavigationLink>
     <Divider />
     <ToggleContent
       toggle={(toggler) => (
-        <NavigationButton.Button
+        <NavigationButton
           variant="primary"
           href="/post-a-task"
           onClick={toggler}
         >
           Post a task
-        </NavigationButton.Button>
+        </NavigationButton>
       )}
       content={(toggler) => (
         <PostATaskModal onClose={toggler} />
       )}
     />
     <CategoriesDropdown />
-    <NavigationLink.Text indictable href="/browse-tasks">
+    <NavigationLink indictable href="/browse-tasks">
       Browse tasks
-    </NavigationLink.Text>
-    <NavigationLink.Text indictable href="/how-it-works">
+    </NavigationLink>
+    <NavigationLink indictable href="/how-it-works">
       How it works
-    </NavigationLink.Text>
+    </NavigationLink>
   </Layout>
 );
 
