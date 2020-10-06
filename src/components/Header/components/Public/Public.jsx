@@ -21,7 +21,7 @@ const Logo = styled.span`
 
 const Public = () => (
   <Layout>
-    <NavigationLink href="/">
+    <NavigationLink to="/">
       <Logo>LOGO</Logo>
     </NavigationLink>
     <Divider />
@@ -40,10 +40,10 @@ const Public = () => (
       )}
     />
     <CategoriesDropdown />
-    <NavigationLink indictable href="/browse-tasks">
+    <NavigationLink indictable to="/browse-tasks">
       Browse tasks
     </NavigationLink>
-    <NavigationLink indictable href="/how-it-works">
+    <NavigationLink indictable to="/how-it-works">
       How it works
     </NavigationLink>
   </Layout>

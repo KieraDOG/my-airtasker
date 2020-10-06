@@ -5,7 +5,10 @@ import NavigationLink from '../NavigationLink';
 import SignInModal from './components/SignInModal';
 import SignUpModal from './components/SignUpModal';
 import NakedButton from '../../../NakedButton';
+import withFetch from '../../../withFetch';
 import Link from '../../../Link';
+import { withRouter } from '../../../Router';
+import getAuth from '../../../../apis/getAuth';
 
 const Layout = styled.div`
   display: flex;
@@ -30,6 +33,17 @@ class Private extends React.Component {
     this.setUser = this.setUser.bind(this);
   }
 
+  componentDidMount() {
+    this.getAuth();
+  }
+
+  getAuth() {
+    const { fetch } = this.props;
+
+    fetch(() => getAuth())
+      .then(this.setUser);
+  }
+
   setUser(target) {
     this.setState({
       user: target,
@@ -49,13 +63,27 @@ class Private extends React.Component {
   }
 
   render() {
+    const { router } = this.props;
     const { showModal, user } = this.state;
 
     return (
       <>
         <Layout>
           {user ? (
-            <NavigationLink href="/dashboard">Dashboard</NavigationLink>
+            <>
+              <NavigationLink href="/dashboard">Dashboard</NavigationLink>
+              <NavigationLink
+                as={NakedButton}
+                onClick={(event) => {
+                  event.preventDefault();
+                  this.setUser();
+                  localStorage.removeItem('user');
+                  router.push('/');
+                }}
+              >
+                Log out
+              </NavigationLink>
+            </>
           ) : (
             <>
               <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
@@ -90,4 +118,7 @@ class Private extends React.Component {
   }
 }
 
-export default Private;
+const withFetchPrivate = withFetch(Private);
+const WithRouterPrivate = withRouter(withFetchPrivate);
+
+export default WithRouterPrivate;

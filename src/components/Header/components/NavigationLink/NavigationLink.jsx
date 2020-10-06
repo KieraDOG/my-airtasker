@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
+import { Link } from '../../../Router';
 
-const NavigationLink = styled.a`
+const NavigationLink = styled(Link)`
   text-decoration: none;
   color: #545a77;
   margin: 16px;
