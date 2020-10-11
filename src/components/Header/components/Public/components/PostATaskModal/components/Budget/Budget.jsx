@@ -7,14 +7,14 @@ import Progress from '../Progress';
 
 const Budget = ({
   onClose,
-  onPrevious,
+  onBack,
 }) => (
   <Modal onClose={onClose}>
     <Modal.Header>Suggest how much</Modal.Header>
     <Progress value={`${(100 / 3) * 3}%`} />
     <Modal.Body>Budget</Modal.Body>
     <Footer>
-      <Button variant="secondary" onClick={onPrevious}>Previous</Button>
+      <Button variant="secondary" onClick={onBack}>Back</Button>
       <Button variant="success" onClick={onClose}>Quote</Button>
     </Footer>
   </Modal>
@@ -22,7 +22,7 @@ const Budget = ({
 
 Budget.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onPrevious: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
 };
 
 export default Budget;

@@ -10,11 +10,11 @@ class PostATaskModal extends React.Component {
     super(props);
 
     this.state = {
-      step: 0,
+      step: 1,
     };
 
     this.handelNext = this.handelNext.bind(this);
-    this.handelPrevious = this.handelPrevious.bind(this);
+    this.handelBack = this.handelBack.bind(this);
   }
 
   handelNext(event) {
@@ -27,7 +27,7 @@ class PostATaskModal extends React.Component {
     }));
   }
 
-  handelPrevious(event) {
+  handelBack(event) {
     if (event) {
       event.preventDefault();
     }
@@ -50,21 +50,21 @@ class PostATaskModal extends React.Component {
       ),
       (
         <TaskDescription
-          onPrevious={this.handelPrevious}
+          onBack={this.handelBack}
           onNext={this.handelNext}
           onClose={onClose}
         />
       ),
       (
         <Appointment
-          onPrevious={this.handelPrevious}
+          onBack={this.handelBack}
           onNext={this.handelNext}
           onClose={onClose}
         />
       ),
       (
         <Budget
-          onPrevious={this.handelPrevious}
+          onBack={this.handelBack}
           onClose={onClose}
         />
       ),
