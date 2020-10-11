@@ -15,35 +15,24 @@ const withFetch = (Component) => {
       this.fetch = this.fetch.bind(this);
     }
 
-    fetch(onFetch, errorMessage) {
+    fetch(fetcher) {
       this.setState({
         error: null,
         loading: false,
       });
 
-      return onFetch()
+      return fetcher()
         .then((res) => {
           this.setState({
             loading: false,
           });
-
-          if (!res.ok) {
-            throw res;
-          }
-
-          const token = res.headers.get('X-Auth-Token');
-          if (token) {
-            localStorage.setItem('token', token);
-          }
-
-          return res.json();
+          return res.data;
         })
         .catch((error) => {
-          if (errorMessage && errorMessage[error.status]) {
-            this.setState({
-              error: errorMessage[error.status],
-            });
-          }
+          this.setState({
+            loading: false,
+            error: error.response,
+          });
 
           throw error;
         });
