@@ -1,17 +1,23 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import Modal from '../../../../../Modal';
-import NakedButton from '../../../../../NakedButton';
-import { withRouter } from '../../../../../Router';
-import withForm from '../../../../../withForm';
-import withFetch from '../../../../../withFetch';
+import signIn from '../../../../../../apis/signIn';
+import compose from '../../../../../../utils/compose';
+import Alert from '../../../../../Alert';
 import Button from '../../../../../Button';
 import FormItem from '../../../../../FormItem';
 import Input from '../../../../../Input';
-import Alert from '../../../../../Alert';
-import signIn, { error as ERROR } from '../../../../../../apis/signIn';
+import Modal from '../../../../../Modal';
+import NakedButton from '../../../../../NakedButton';
+import { withRouter } from '../../../../../Router';
+import withFetch from '../../../../../withFetch';
+import withForm from '../../../../../withForm';
 import form from './form';
+
+const ERROR = {
+  404: 'Email and password does not match, please try again',
+  500: 'Something wrong, please try again',
+};
 
 const Form = styled.form`
   padding: 16px 0;
@@ -43,7 +49,7 @@ const SignInModal = ({
 
         const data = getData();
 
-        fetch(() => signIn(data), ERROR)
+        fetch(() => signIn(data))
           .then((user) => {
             onClose();
             onSignInSuccess(user);
@@ -52,9 +58,9 @@ const SignInModal = ({
       }}
       >
         {error && (
-        <FormItem>
-          <Alert>{error}</Alert>
-        </FormItem>
+          <FormItem>
+            <Alert>{ERROR[error.status]}</Alert>
+          </FormItem>
         )}
         {Object.keys(form).map((key) => {
           const { label, type } = form[key];
@@ -97,14 +103,37 @@ const SignInModal = ({
   </Modal>
 );
 
+SignInModal.defaultProps = {
+  error: undefined,
+  loading: false,
+};
+
 SignInModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSignInSuccess: PropTypes.func.isRequired,
   onSignUp: PropTypes.func.isRequired,
+  router: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  formData: PropTypes.objectOf(PropTypes.shape({
+    value: PropTypes.string,
+    touched: PropTypes.bool,
+  })).isRequired,
+  getData: PropTypes.func.isRequired,
+  getErrorMessage: PropTypes.func.isRequired,
+  handleFormDataChange: PropTypes.func.isRequired,
+  isFormValid: PropTypes.func.isRequired,
+  fetch: PropTypes.func.isRequired,
+  error: PropTypes.shape({
+    status: PropTypes.number,
+  }),
+  loading: PropTypes.bool,
 };
 
-const WithFetchSignInModal = withFetch(SignInModal);
-const WithFormSignInModal = withForm(form)(WithFetchSignInModal);
-const WithRouterSignInModal = withRouter(WithFormSignInModal);
+const EnhancedSignInModal = compose(
+  withForm(form),
+  withRouter,
+  withFetch,
+)(SignInModal);
 
-export default WithRouterSignInModal;
+export default EnhancedSignInModal;
