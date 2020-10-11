@@ -7,45 +7,38 @@ import withFetch from '../../../withFetch';
 import NavigationButton from '../NavigationButton';
 import NavigationLink from '../NavigationLink';
 import Logout from './components/Logout';
-import SignInModal from './components/SignInModal';
-import SignUpModal from './components/SignUpModal';
 import { AuthenticationContext } from '../../../withAuthentication';
+import AuthenticationModals from '../../../AuthenticationModals';
 
 const Layout = styled.div`
   display: flex;
 `;
-
-const MODAL = {
-  SIGN_IN: 'SIGN_IN',
-  SIGN_UP: 'SIGN_UP',
-  EMPTY: null,
-};
 
 class Private extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showModal: MODAL.EMPTY,
+      authenticationModal: null,
     };
 
-    this.showModal = this.showModal.bind(this);
+    this.setAuthenticationModal = this.setAuthenticationModal.bind(this);
   }
 
-  showModal(target) {
+  setAuthenticationModal(target) {
     return (event) => {
       if (event) {
         event.preventDefault();
       }
 
       this.setState({
-        showModal: target,
+        authenticationModal: target,
       });
     };
   }
 
   render() {
-    const { showModal } = this.state;
+    const { authenticationModal } = this.state;
 
     return (
       <>
@@ -58,22 +51,16 @@ class Private extends React.Component {
               </>
             ) : (
               <>
-                <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
+                <NavigationLink as={NakedButton} onClick={this.setAuthenticationModal('signIn')}>
                   Sign in
                 </NavigationLink>
-                <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_UP)}>
+                <NavigationLink as={NakedButton} onClick={this.setAuthenticationModal('signUp')}>
                   Sign up
                 </NavigationLink>
-                {showModal === MODAL.SIGN_IN && (
-                  <SignInModal
-                    onClose={this.showModal(MODAL.EMPTY)}
-                    onSignUp={this.showModal(MODAL.SIGN_UP)}
-                  />
-                )}
-                {showModal === MODAL.SIGN_UP && (
-                  <SignUpModal
-                    onClose={this.showModal(MODAL.EMPTY)}
-                    onSignIn={this.showModal(MODAL.SIGN_IN)}
+                {authenticationModal && (
+                  <AuthenticationModals
+                    initialModal={authenticationModal}
+                    onClose={this.setAuthenticationModal()}
                   />
                 )}
               </>
