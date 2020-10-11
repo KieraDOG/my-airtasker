@@ -1,98 +1,74 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
-import AuthenticationModals from '../../../../../AuthenticationModals';
-import Button from '../../../../../Button';
-import Modal from '../../../../../Modal';
-import { AuthenticationContext } from '../../../../../withAuthentication';
-
-const Body = styled.div`
-  padding: 80px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Image = styled.img`
-`;
-
-const Title = styled.div`
-  font-size: 24px;
-  text-align: center;
-  margin-top: 24px;
-  margin-bottom: 8px;
-`;
-
-const SubTitle = styled.div`
-  font-size: 14px;
-  text-align: center;
-  line-height: 1.35;
-`;
-
-const Footer = styled(Modal.Footer)`
-  text-align: center;
-`;
+import Appointment from './components/Appointment';
+import Budget from './components/Budget';
+import Introduction from './components/Introduction';
+import TaskDescription from './components/TaskDescription';
 
 class PostATaskModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showAuthenticationModals: false,
+      step: 0,
     };
 
-    this.toggleShowAuthenticationModals = this.toggleShowAuthenticationModals.bind(this);
+    this.handelNext = this.handelNext.bind(this);
+    this.handelPrevious = this.handelPrevious.bind(this);
   }
 
-  toggleShowAuthenticationModals(event) {
+  handelNext(event) {
     if (event) {
       event.preventDefault();
     }
 
     this.setState((prevState) => ({
-      showAuthenticationModals: !prevState.showAuthenticationModals,
+      step: prevState.step + 1,
+    }));
+  }
+
+  handelPrevious(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    this.setState((prevState) => ({
+      step: prevState.step - 1,
     }));
   }
 
   render() {
     const { onClose } = this.props;
-    const { showAuthenticationModals } = this.state;
+    const { step } = this.state;
 
-    if (showAuthenticationModals) {
-      return (
-        <AuthenticationModals
-          initialModal="signUp"
-          onClose={this.toggleShowAuthenticationModals}
+    return [
+      (
+        <Introduction
+          onNext={this.handelNext}
+          onClose={onClose}
         />
-      );
-    }
-
-    return (
-      <Modal onClose={onClose}>
-        <Body>
-          <Image src="https://www.airtasker.com/images/taylor/on-boarding.png" alt="On boarding" />
-          <Title>Start getting offers in no time</Title>
-          <SubTitle>
-            We&amp;re just going to ask a few questions to help you find the right Tasker
-            - it will only take a few minutes!
-          </SubTitle>
-        </Body>
-        <Footer>
-          <AuthenticationContext.Consumer>
-            {({ user }) => (user ? (
-              <Button width="150px" variant="success" onClick={console.log}>
-                Next
-              </Button>
-            ) : (
-              <Button variant="secondary" onClick={this.toggleShowAuthenticationModals}>
-                Register Now
-              </Button>
-            ))}
-          </AuthenticationContext.Consumer>
-          <p>Connect with experts to get the job done</p>
-        </Footer>
-      </Modal>
-    );
+      ),
+      (
+        <TaskDescription
+          onPrevious={this.handelPrevious}
+          onNext={this.handelNext}
+          onClose={onClose}
+        />
+      ),
+      (
+        <Appointment
+          onPrevious={this.handelPrevious}
+          onNext={this.handelNext}
+          onClose={onClose}
+        />
+      ),
+      (
+        <Budget
+          onPrevious={this.handelPrevious}
+          onClose={onClose}
+        />
+      ),
+    ][step];
   }
 }
 
