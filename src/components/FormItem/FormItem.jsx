@@ -56,12 +56,14 @@ const FormItem = ({
 
 FormItem.defaultProps = {
   label: undefined,
+  helper: undefined,
   htmlFor: undefined,
   errorMessage: undefined,
 };
 
 FormItem.propTypes = {
   label: PropTypes.string,
+  helper: PropTypes.string,
   htmlFor: PropTypes.string,
   errorMessage: PropTypes.string,
   children: PropTypes.node.isRequired,

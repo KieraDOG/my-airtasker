@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import RouterContext from './RouterContext';
 
 const Link = ({
@@ -21,5 +22,15 @@ const Link = ({
     )}
   </RouterContext.Consumer>
 );
+
+Link.defaultProps = {
+  className: undefined,
+};
+
+Link.propTypes = {
+  to: PropTypes.string.isRequired,
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
 
 export default Link;

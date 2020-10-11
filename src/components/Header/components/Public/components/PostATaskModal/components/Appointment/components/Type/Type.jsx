@@ -20,10 +20,7 @@ const Subtitle = styled.div`
   color: #545a77;
 `;
 
-const Type = ({
-  value,
-  onChange,
-}) => (
+const Type = () => (
   <Types>
     <Item>
       <Title>In person</Title>
