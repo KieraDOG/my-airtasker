@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import NavigationLink from '../../../NavigationLink';
+import NakedButton from '../../../../../NakedButton';
 
 const Wrapper = styled.div`
   position: relative;
@@ -25,10 +26,16 @@ const Menu = styled.div`
 `;
 
 const Left = styled.div`
-  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 25px;
+  border-right: 1px solid #dadada;
+  width: 150px;
 `;
 
 const Right = styled.div`
+  width: 200px;
 `;
 
 class CategoriesDropdown extends React.Component {
@@ -69,18 +76,19 @@ class CategoriesDropdown extends React.Component {
         onMouseEnter={this.toggleMenu}
         onMouseLeave={this.toggleMenu}
       >
-        <NavigationLink as={CursorWrapper} indictable>
+        <NavigationLink as={CursorWrapper}>
           Categories
         </NavigationLink>
         {show && (
           <Menu>
             <Left>
-              <button type="button" onClick={this.handleContentItemClick('POSTER')}>
+              <NakedButton onClick={this.handleContentItemClick('POSTER')}>
                 As a poster
-              </button>
-              <button type="button" onClick={this.handleContentItemClick('TASKER')}>
+              </NakedButton>
+              &nbsp;
+              <NakedButton onClick={this.handleContentItemClick('TASKER')}>
                 As a Tasker
-              </button>
+              </NakedButton>
             </Left>
             <Right>
               {showContent === 'POSTER' && (
