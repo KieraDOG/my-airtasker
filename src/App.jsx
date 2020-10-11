@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Header from './components/Header';
 import Router, { Route } from './components/Router';
-import Home from './pages/Home';
+import { Authentication } from './components/withAuthentication';
 import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 
 const Layout = styled.div`
   display: flex;
@@ -22,20 +23,22 @@ const FooterWrapper = styled.section`
 `;
 
 const App = () => (
-  <Router>
-    <Layout>
-      <HeaderWrapper>
-        <Header />
-      </HeaderWrapper>
-      <ContentWrapper>
-        <Route path="/" render={() => (<Home />)} />
-        <Route path="/dashboard" render={() => (<Dashboard />)} />
-      </ContentWrapper>
-      <FooterWrapper>
-        Footer
-      </FooterWrapper>
-    </Layout>
-  </Router>
-)
+  <Authentication>
+    <Router>
+      <Layout>
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
+        <ContentWrapper>
+          <Route path="/" render={() => (<Home />)} />
+          <Route path="/dashboard" render={() => (<Dashboard />)} />
+        </ContentWrapper>
+        <FooterWrapper>
+          Footer
+        </FooterWrapper>
+      </Layout>
+    </Router>
+  </Authentication>
+);
 
 export default App;

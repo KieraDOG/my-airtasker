@@ -10,6 +10,7 @@ import Input from '../../../../../Input';
 import Modal from '../../../../../Modal';
 import NakedButton from '../../../../../NakedButton';
 import { withRouter } from '../../../../../Router';
+import withAuthentication from '../../../../../withAuthentication';
 import withFetch from '../../../../../withFetch';
 import withForm from '../../../../../withForm';
 import form from './form';
@@ -26,7 +27,7 @@ const Form = styled.form`
 const SignInModal = ({
   onClose,
   onSignUp,
-  onSignInSuccess,
+  authentication,
   formData,
   getData,
   getErrorMessage,
@@ -52,7 +53,7 @@ const SignInModal = ({
         fetch(() => signIn(data))
           .then((user) => {
             onClose();
-            onSignInSuccess(user);
+            authentication.setUser(user);
             router.push('/dashboard');
           });
       }}
@@ -110,7 +111,6 @@ SignInModal.defaultProps = {
 
 SignInModal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onSignInSuccess: PropTypes.func.isRequired,
   onSignUp: PropTypes.func.isRequired,
   router: PropTypes.shape({
     push: PropTypes.func,
@@ -128,12 +128,16 @@ SignInModal.propTypes = {
     status: PropTypes.number,
   }),
   loading: PropTypes.bool,
+  authentication: PropTypes.shape({
+    setUser: PropTypes.func,
+  }).isRequired,
 };
 
 const EnhancedSignInModal = compose(
   withForm(form),
   withRouter,
   withFetch,
+  withAuthentication,
 )(SignInModal);
 
 export default EnhancedSignInModal;

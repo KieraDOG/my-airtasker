@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import Link from '../../../Link';
+import NakedButton from '../../../NakedButton';
+import { withRouter } from '../../../Router';
+import withFetch from '../../../withFetch';
 import NavigationButton from '../NavigationButton';
 import NavigationLink from '../NavigationLink';
+import Logout from './components/Logout';
 import SignInModal from './components/SignInModal';
 import SignUpModal from './components/SignUpModal';
-import NakedButton from '../../../NakedButton';
-import withFetch from '../../../withFetch';
-import Link from '../../../Link';
-import { withRouter } from '../../../Router';
-import getAuth from '../../../../apis/getAuth';
+import { AuthenticationContext } from '../../../withAuthentication';
 
 const Layout = styled.div`
   display: flex;
@@ -26,28 +27,9 @@ class Private extends React.Component {
 
     this.state = {
       showModal: MODAL.EMPTY,
-      user: null,
     };
 
     this.showModal = this.showModal.bind(this);
-    this.setUser = this.setUser.bind(this);
-  }
-
-  componentDidMount() {
-    this.getAuth();
-  }
-
-  getAuth() {
-    const { fetch } = this.props;
-
-    fetch(() => getAuth())
-      .then(this.setUser);
-  }
-
-  setUser(target) {
-    this.setState({
-      user: target,
-    });
   }
 
   showModal(target) {
@@ -63,52 +45,40 @@ class Private extends React.Component {
   }
 
   render() {
-    const { router } = this.props;
-    const { showModal, user } = this.state;
+    const { showModal } = this.state;
 
     return (
       <>
         <Layout>
-          {user ? (
-            <>
-              <NavigationLink href="/dashboard">Dashboard</NavigationLink>
-              <NavigationLink
-                as={NakedButton}
-                onClick={(event) => {
-                  event.preventDefault();
-                  this.setUser();
-                  localStorage.removeItem('user');
-                  router.push('/');
-                }}
-              >
-                Log out
-              </NavigationLink>
-            </>
-          ) : (
-            <>
-              <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
-                Sign in
-              </NavigationLink>
-              <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_UP)}>
-                Sign up
-              </NavigationLink>
-              {showModal === MODAL.SIGN_IN && (
-                <SignInModal
-                  onClose={this.showModal(MODAL.EMPTY)}
-                  onSignUp={this.showModal(MODAL.SIGN_UP)}
-                  onSignInSuccess={this.setUser}
-                />
-              )}
-
-              {showModal === MODAL.SIGN_UP && (
-                <SignUpModal
-                  onClose={this.showModal(MODAL.EMPTY)}
-                  onSignIn={this.showModal(MODAL.SIGN_IN)}
-                  onSignUpSuccess={this.setUser}
-                />
-              )}
-            </>
-          )}
+          <AuthenticationContext.Consumer>
+            {(authentication) => (authentication.user ? (
+              <>
+                <NavigationLink to="/dashboard">Dashboard</NavigationLink>
+                <Logout />
+              </>
+            ) : (
+              <>
+                <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_IN)}>
+                  Sign in
+                </NavigationLink>
+                <NavigationLink as={NakedButton} onClick={this.showModal(MODAL.SIGN_UP)}>
+                  Sign up
+                </NavigationLink>
+                {showModal === MODAL.SIGN_IN && (
+                  <SignInModal
+                    onClose={this.showModal(MODAL.EMPTY)}
+                    onSignUp={this.showModal(MODAL.SIGN_UP)}
+                  />
+                )}
+                {showModal === MODAL.SIGN_UP && (
+                  <SignUpModal
+                    onClose={this.showModal(MODAL.EMPTY)}
+                    onSignIn={this.showModal(MODAL.SIGN_IN)}
+                  />
+                )}
+              </>
+            ))}
+          </AuthenticationContext.Consumer>
           <NavigationButton as={Link} variant="secondary" href="/enroll">
             Become a Tasker
           </NavigationButton>
