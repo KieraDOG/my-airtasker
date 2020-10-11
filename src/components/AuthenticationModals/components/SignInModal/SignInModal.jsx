@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
 import signIn from '../../../../apis/signIn';
 import compose from '../../../../utils/compose';
 import Alert from '../../../Alert';
@@ -20,10 +19,6 @@ const ERROR = {
   500: 'Something wrong, please try again',
 };
 
-const Form = styled.form`
-  padding: 16px 0;
-`;
-
 const SignInModal = ({
   onClose,
   onSignUp,
@@ -41,7 +36,7 @@ const SignInModal = ({
   <Modal onClose={onClose}>
     <Modal.Header>Sign In</Modal.Header>
     <Modal.Body>
-      <Form onSubmit={(event) => {
+      <form onSubmit={(event) => {
         event.preventDefault();
 
         if (!isFormValid()) {
@@ -95,7 +90,7 @@ const SignInModal = ({
             Sign in
           </Button>
         </FormItem>
-      </Form>
+      </form>
     </Modal.Body>
     <Modal.Footer>
       Not a member yet?&nbsp;

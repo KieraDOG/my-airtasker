@@ -9,8 +9,19 @@ class Guard extends React.Component {
     this.preCheck();
   }
 
+  componentDidUpdate(prevProps) {
+    const { authentication } = this.props;
+    if (prevProps.authentication.initialized !== authentication.initialized) {
+      this.preCheck();
+    }
+  }
+
   preCheck() {
     const { authentication, router } = this.props;
+
+    if (!authentication.initialized) {
+      return;
+    }
 
     if (!authentication.user) {
       router.push('/');
@@ -31,6 +42,7 @@ class Guard extends React.Component {
 Guard.propTypes = {
   authentication: PropTypes.shape({
     user: PropTypes.shape({}),
+    initialized: PropTypes.bool,
   }).isRequired,
   router: PropTypes.shape({
     push: PropTypes.func,

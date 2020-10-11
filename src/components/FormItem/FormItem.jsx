@@ -19,6 +19,12 @@ const Label = styled.label`
   `}
 `;
 
+const Helper = styled.div`
+  font-size: 14px;
+  color: #545a77;
+  margin-bottom: 8px;
+`;
+
 const ErrorMessage = styled.div`
   margin-top: 4px;
   font-size: 14px;
@@ -27,6 +33,7 @@ const ErrorMessage = styled.div`
 
 const FormItem = ({
   label,
+  helper,
   htmlFor,
   children,
   errorMessage,
@@ -36,6 +43,11 @@ const FormItem = ({
       <Label error={errorMessage} htmlFor={htmlFor}>
         {label}
       </Label>
+    )}
+    {helper && (
+      <Helper>
+        {helper}
+      </Helper>
     )}
     {children}
     {errorMessage && (<ErrorMessage>{errorMessage}</ErrorMessage>)}

@@ -10,14 +10,25 @@ class PostATaskModal extends React.Component {
     super(props);
 
     this.state = {
-      step: 1,
+      step: 0,
+      data: {},
     };
 
-    this.handelNext = this.handelNext.bind(this);
-    this.handelBack = this.handelBack.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+    this.handleBack = this.handleBack.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handelNext(event) {
+  handleSubmit(data) {
+    this.setState((prevState) => ({
+      data: {
+        ...prevState.data,
+        ...data,
+      },
+    }));
+  }
+
+  handleNext(event) {
     if (event) {
       event.preventDefault();
     }
@@ -27,7 +38,7 @@ class PostATaskModal extends React.Component {
     }));
   }
 
-  handelBack(event) {
+  handleBack(event) {
     if (event) {
       event.preventDefault();
     }
@@ -44,27 +55,29 @@ class PostATaskModal extends React.Component {
     return [
       (
         <Introduction
-          onNext={this.handelNext}
+          onNext={this.handleNext}
           onClose={onClose}
         />
       ),
       (
         <TaskDescription
-          onBack={this.handelBack}
-          onNext={this.handelNext}
+          onBack={this.handleBack}
+          onNext={this.handleNext}
+          onSubmit={this.handleSubmit}
           onClose={onClose}
         />
       ),
       (
         <Appointment
-          onBack={this.handelBack}
-          onNext={this.handelNext}
+          onBack={this.handleBack}
+          onNext={this.handleNext}
+          onSubmit={this.handleSubmit}
           onClose={onClose}
         />
       ),
       (
         <Budget
-          onBack={this.handelBack}
+          onBack={this.handleBack}
           onClose={onClose}
         />
       ),

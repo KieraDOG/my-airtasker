@@ -11,9 +11,11 @@ class Authentication extends React.Component {
 
     this.state = {
       user: null,
+      initialized: false,
     };
 
     this.setUser = this.setUser.bind(this);
+    this.initialized = this.initialized.bind(this);
   }
 
   componentDidMount() {
@@ -23,7 +25,10 @@ class Authentication extends React.Component {
   getAuth() {
     const { fetch } = this.props;
 
-    fetch(getAuth).then(this.setUser);
+    fetch(getAuth)
+      .then(this.setUser)
+      .then(this.initialized)
+      .catch(this.initialized);
   }
 
   setUser(target) {
@@ -36,13 +41,18 @@ class Authentication extends React.Component {
     });
   }
 
+  initialized() {
+    this.setState({ initialized: true });
+  }
+
   render() {
-    const { user } = this.state;
+    const { user, initialized } = this.state;
     const { children, error, loading } = this.props;
 
     const value = {
       user,
       setUser: this.setUser,
+      initialized,
       error,
       loading,
     };

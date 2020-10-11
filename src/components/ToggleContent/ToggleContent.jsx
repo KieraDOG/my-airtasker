@@ -6,7 +6,7 @@ class ToggleContent extends React.Component {
     super(props);
 
     this.state = {
-      show: true,
+      show: false,
     };
 
     this.toggleShow = this.toggleShow.bind(this);

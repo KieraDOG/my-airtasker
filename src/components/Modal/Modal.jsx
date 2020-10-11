@@ -40,7 +40,7 @@ const Close = styled(NakedButton)`
 `;
 
 const Body = styled.div`
-  padding: 16px 24px;
+  padding: 32px 24px;
 `;
 
 const Footer = styled.div`

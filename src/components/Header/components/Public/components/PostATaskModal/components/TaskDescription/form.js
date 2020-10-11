@@ -1,6 +1,7 @@
 const form = {
   task: {
     label: 'What do you need done?',
+    helper: "This'll be the title of your task - e.g. Help move my sofa",
     type: 'text',
     getErrorMessage: (value) => {
       if (value.length < 10 || value.length > 50) {
@@ -11,8 +12,8 @@ const form = {
     },
   },
   details: {
-    label: 'Password',
-    type: 'password',
+    label: 'What are the details?',
+    helper: 'Be as specific as you can about what needs doing',
     getErrorMessage: (value) => {
       if (value.length < 25) {
         return 'Please enter at least 25 characters';

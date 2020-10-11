@@ -80,7 +80,7 @@ class Introduction extends React.Component {
         <Footer>
           <AuthenticationContext.Consumer>
             {({ user }) => (user ? (
-              <Button width="150px" variant="success" onClick={onNext}>
+              <Button variant="success" onClick={onNext}>
                 Next
               </Button>
             ) : (
