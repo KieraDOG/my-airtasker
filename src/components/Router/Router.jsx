@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import RouterContext from './RouterContext';
 
 class Router extends React.Component {
@@ -6,7 +7,7 @@ class Router extends React.Component {
     super(props);
 
     this.state = {
-      path: '/',
+      path: window.location.pathname,
     };
 
     this.push = this.push.bind(this);
@@ -37,5 +38,9 @@ class Router extends React.Component {
     );
   }
 }
+
+Router.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default Router;
