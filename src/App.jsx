@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Guard from './components/Guard';
 import Header from './components/Header';
 import Router, { Route } from './components/Router';
 import { Authentication } from './components/withAuthentication';
@@ -31,7 +32,14 @@ const App = () => (
         </HeaderWrapper>
         <ContentWrapper>
           <Route path="/" render={() => (<Home />)} />
-          <Route path="/dashboard" render={() => (<Dashboard />)} />
+          <Route
+            path="/dashboard"
+            render={() => (
+              <Guard>
+                <Dashboard />
+              </Guard>
+            )}
+          />
         </ContentWrapper>
         <FooterWrapper>
           Footer
