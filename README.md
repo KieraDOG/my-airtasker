@@ -1,50 +1,107 @@
-# My Airtasker
+# JR Project 3
 
-- styled-components
-- prop-types
+## 组内要求
 
-# 复用?
-- 不要做提前量 （代码上一定不要做提前量），因为没有实际的使用场景，你提前量大概率（一定）不准确。
-- 不要 Over engineering，因为 Over engineering 不带来任何实际好处。
-- 在自己写的自己的代码上做 Readable，Maintainable，Reuseable。不要替其他代码做任何考量。
+1. StandUp Meeting (Daily - 2 per week)
+2. Retro Meeting (Weekly) -> 在本节课结束后下节课开始前进行一次!
 
-## SignIn 换成一个带悬浮横线的样式
+- Bus Factor
+- 微信里面写代码片段非常困难，Slack （99.99% 澳洲IT公司）
+- Retro (Sad, Nature, Happy)
+- Sad: 写代码的时候感觉很困难，一些知识点不理解，写起来非常慢 -> Action （我安排组员B每天2个小时和你一起写代码）
+- Nature: 我们P3进度有些慢 -> Action （具体哪里慢，如何加快，是否需要请外援）
+- Happy: 大家在互相帮助上表现的很积极
 
-## React 哲学
-1. 划分 Components
-2. 做静态版本
+- 组内多交流，推荐 Agile （Standup Meeting, Retro Meeting）
+- 多开会多讨论少写代码
+- Acceptance Criteria (AC) + Due Date
+- 组长需要负起责任，调动组员积极性
+- 组员需要听从安排，有问题及时向组长反应
 
-## Header
+1. npx create-react-app
+2. 对项目进行一个基础建设 (CSS? Icon? File Structure? Image?)
 
-AC (Acceptance Criteria):
-- Logo
-- Logo 和 Links 中间不要忘记这个竖线
-- 左面的 Links 
-- 右面的 Links
-- 'Post a task' 是 button （背景为红色）样式
-- 'Become a Tasker' 是 button （背景为灰色） 样式
+## CSS
+a. CSS 用不用库? 如果用库，用什么库？如果不用库，用什么 CSS 写法
+UI Developer -> API Caller
 
-1. 做了简单的静态版本 6个AC (任何东西都不要多想！！！) v1
-2. v1 的 component 划分
-3. v1 的 Navigation 和 Authentication 没办法 share components
-4. v2 的 component 划分
-5. button 的多样性?
-6. button 如何做多样性?
-7. v3 的 component 划分
+P3: 不用库，我会用 Styled Components 手写一份 CSS 库出来
 
-### Logo
-### Navigation
-#### NavLink (Button | Text)
-### Authentication
+0. antd
+1. antd
+2. TO_DO
+3. material-UI
 
-Daily standup meeting
-- 汇报昨天一天的工作进度，和今天一天的工作预期
-衍生出
-- 任务要小，要容易完成。要让组员有幸福感，有成就感。
+b. Icon
+font-awesome
 
-简单的重复要优于复杂的抽象
-Over Engineering
+## File Structure
+c. File Structure?
 
-A. Modal (Context)
-B. Dropdown
-C. Router
+现在要写 Navigation，Component 放在哪里？怎么放？NavItem Components?
+现在要写 Task Page，放在哪里?
+
+/src/components
+/src/pages
+
+sub components folder
+
+## Navigation 
+
+AC:
+
+1. 左边有 Logo
+2. 中间是 `Post a task` button + page links
+3. 左边和中间有竖线分隔
+4. `Post a task` 样式是红色高亮
+5. 右面是 `Sign up` + `Log in` + `Become a Tasker` link
+6. `Sign up` 和 `Log in` button 的样式和 page links 的样式一致
+8. `Become a Tasker` 是 button 样式但是是 link 功能
+7. `Become a Tasker` 样式是灰色背景 + 蓝色字体
+10. 点击 `Sign up` 和 `Log in` 出现相应的弹窗
+11. `Sign up` 和 `Log in` 弹窗有...功能
+13. Post a task 的样式和以后其他的样式会出现复用的可能性？
+
+`PostATaskModal`
+做 Navigation 的组员B这次不做弹窗，只做基本功能
+组员C `Post a task` 弹窗
+9. `Post a task` 弹窗有...功能
+
+`LoginModal`
+组员A来做
+8. 点击 `Post a task` 出现 `Post a task` 弹窗
+
+`SignUpModal`
+组员D来做
+8. 点击 `Post a task` 出现 `Post a task` 弹窗
+
+`Modal`
+我们如何做出一个可以让3个地方复用的 Modal
+
+12. 链接跳转到相应页面 (react-router-dom)
+
+多达 20 个复杂的功能
+
+开会！！！！！！！开会！！！！！！！开会！！！！！！！
+
+1. Modal -> click `Log in` or `Sign up` will show a modal
+2. Modal is closeable by click close button
+3. Modal is closeable by click outside of Modal
+4. Modal has a `Log in` or `Sign up` header
+5. Modal has a `Don't have a account? Sign Up` or `Already have an account? Log in` Footer
+6. Modal has a `Forget password` to open `Forget password` modal
+7. Footer Button will open the other Modal
+
+---
+
+7. Log in has a form to submit email and password
+8. Log in has not empty email validation
+9. Log in has not empty password validation
+10. Sign up has ... validation
+11. Sign up has ... validation
+12. Sign up has ... validation
+13. Sign up has ... validation
+14. Sign up has T&C
+15. Log in will call /auth/log-in api
+16. Sign up will call /auth/sign-up api
+...
