@@ -105,3 +105,49 @@ AC:
 15. Log in will call /auth/log-in api
 16. Sign up will call /auth/sign-up api
 ...
+
+Declarative (props, state)
+Component Based (lifecycle)
+
+Readable, Maintainable, Reusable
+
+SOLID
+
+Class 1 (This one)
+
+Form Validation
+HOC (Higher Order Components)
+Connect API
+
+Class 2
+
+Connect API
+React Context
+
+Class 3
+
+Redux
+
+Class 4
+
+Unit test
+Build Create React APP, Deploy to S3 (or GithubPages)
+
+1. Email, Password, Confirm Password
+2. Validation Email (non-empty, email), Password (8 chars), Confirm Password (same as password)
+4. T&C ticks
+5. Sign Up
+6. Email, Password
+7. Validation Email, Password (non-empty)
+8. Login
+9. Forget Password
+10. Email
+11. Cancel, Send Button
+
+Out of MVP
+3. Google Auth, FaceBook Auth, AppleID Auth
+
+
+MVP - 最小价值产品 -> MVP 功能 -> MVP 功能 -> ... -> 大型商业化项目
+Nothing Prefect
+

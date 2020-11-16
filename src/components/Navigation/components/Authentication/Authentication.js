@@ -71,7 +71,7 @@ class Authentication extends React.Component {
 
     return (
       <Layout>
-        <Dropdown 
+        {/* <Dropdown 
           visible={showModal === 'SIGN_UP'}
           items={[{
             key: 'dashboard',
@@ -91,13 +91,20 @@ class Authentication extends React.Component {
           >
             Sign up
           </NavItem>
-        </Dropdown>
-        {/* {showModal === 'SIGN_UP' && (
+        </Dropdown> */}
+        <NavItem 
+            as={NakedButton} 
+            highlight
+            onClick={() => showModal === 'SIGN_UP' ? this.setCloseModal() : this.setShowSignUpModal()}
+          >
+            Sign up
+          </NavItem>
+        {showModal === 'SIGN_UP' && (
           <SignUpModal 
             onClose={() => this.setCloseModal()} 
             onLogIn={() => this.setShowLogInModal()}
           />
-        )} */}
+        )}
         <NavItem 
           as={NakedButton} 
           highlight 
