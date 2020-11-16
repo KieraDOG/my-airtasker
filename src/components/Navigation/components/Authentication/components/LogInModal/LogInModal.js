@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import validator from 'validator';
+import logIn from '../../../../../../apis/logIn';
 import Modal from '../../../../../Modal';
 import Button from '../../../../../Button';
 import TextInput from '../../../../../TextInput';
 import FormItem from '../../../../../FormItem';
+import ErrorMessage from '../../../../../ErrorMessage';
 
 const Footer = styled.div`
   display: flex;
@@ -44,7 +46,14 @@ class LogInModal extends React.Component {
     this.state = {
       data: getInitialData(),
       formDirty: false,
+      errorMessage: '',
     };
+  }
+
+  setErrorMessage(message) {
+    this.setState({
+      errorMessage: message,
+    });
   }
  
   setFormDirty(value) {
@@ -89,7 +98,7 @@ class LogInModal extends React.Component {
 
   render() {
     const { onClose, onSignUp } = this.props;
-    const { data, formDirty } = this.state;
+    const { data, formDirty, errorMessage } = this.state;
     
     const valid = this.valid();
     
@@ -108,10 +117,25 @@ class LogInModal extends React.Component {
                 return;
               }
 
-              console.log('Submitted');
-              console.log(data);
+              logIn({
+                email: data.email.value,
+                password: data.password.value
+              })
+                .then(() => onClose())
+                .catch((error) => {
+                  const message = error.response && {
+                    404: 'Email and password does not match, please try again',
+                  }[error.response.status];
+                  
+                  this.setErrorMessage(message || 'Something wrong, please try again later');
+                });
             }}
           >
+            {errorMessage && (
+              <FormItem>
+                <ErrorMessage>{errorMessage}</ErrorMessage>
+              </FormItem>
+            )}
             {FIELDS.map((f) => (
               <FormItem 
                 key={f.key} 

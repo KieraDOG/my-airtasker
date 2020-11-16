@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import validator from 'validator';
+import signUp from '../../../../../../apis/signUp';
 import Modal from '../../../../../Modal';
 import Button from '../../../../../Button';
 import TextInput from '../../../../../TextInput';
 import FormItem from '../../../../../FormItem';
+import ErrorMessage from '../../../../../ErrorMessage';
 
 // 简单的重复优于复杂的抽象
 const Footer = styled.div`
@@ -83,7 +85,14 @@ class SignUpModal extends React.Component {
     this.state = {
       data: getInitialData(),
       formDirty: false,
+      errorMessage: '',
     };
+  }
+
+  setErrorMessage(message) {
+    this.setState({
+      errorMessage: message,
+    });
   }
  
   setFormDirty(value) {
@@ -128,7 +137,7 @@ class SignUpModal extends React.Component {
 
   render() {
     const { onClose, onLogIn } = this.props;
-    const { data, formDirty } = this.state;
+    const { data, formDirty, errorMessage } = this.state;
     
     const valid = this.valid();
     
@@ -147,10 +156,25 @@ class SignUpModal extends React.Component {
                 return;
               }
 
-              console.log('Submitted');
-              console.log(data);
+              signUp({
+                email: data.email.value,
+                password: data.password.value
+              })
+                .then(() => onClose())
+                .catch((error) => {
+                  const message = error.response && {
+                    409: 'Email address is already been taken, please choose another one',
+                  }[error.response.status];
+                  
+                  this.setErrorMessage(message || 'Something wrong, please try again later');
+                });
             }}
           >
+            {errorMessage && (
+              <FormItem>
+                <ErrorMessage>{errorMessage}</ErrorMessage>
+              </FormItem>
+            )}
             {FIELDS.map((f) => (
               <FormItem 
                 key={f.key} 
