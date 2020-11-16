@@ -116,16 +116,17 @@ SOLID
 Class 1 (This one)
 
 Form Validation
-HOC (Higher Order Components)
 Connect API
 
 Class 2
 
-Connect API
+HOC (Higher Order Components)
 React Context
+JWT
 
 Class 3
 
+JWT
 Redux
 
 Class 4
