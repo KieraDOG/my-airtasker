@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import validator from 'validator';
 import signUp from '../../../../../../apis/signUp';
 import Modal from '../../../../../Modal';
 import Button from '../../../../../Button';
 import TextInput from '../../../../../TextInput';
 import FormItem from '../../../../../FormItem';
 import ErrorMessage from '../../../../../ErrorMessage';
+import Fields from './Fields';
 
 // 简单的重复优于复杂的抽象
 const Footer = styled.div`
@@ -35,42 +35,7 @@ const Footer = styled.div`
 
 // 2. 知识点 HOC (Higher Order Component) 高阶组件
 
-const FIELDS = [{
-  key: 'email',
-  label: 'Email',
-  type: 'text',
-  validations: [{
-    message: 'Please enter you email address',
-    validator: (value) => !validator.isEmpty(value),
-  }, {
-    message: 'Please enter a valid email address',
-    validator: (value) => validator.isEmail(value),
-  }],
-}, {
-  key: 'password',
-  label: 'Password',
-  type: 'password',
-  validations: [{
-    message: 'Please enter you password',
-    validator: (value) => !validator.isEmpty(value),
-  }, {
-    message: 'Password must be at least 8 characters',
-    validator: (value) => validator.isLength(value, { min: 8 }),
-  }],
-}, {
-  key: 'confirmPassword',
-  label: 'Confirm password',
-  type: 'password',
-  validations: [{
-    message: 'Please confirm your password',
-    validator: (value) => !validator.isEmpty(value),
-  }, {
-    message: 'Confirm password is different to your password',
-    validator: (value, data) => value === data.password.value,
-  }],
-}];
-
-const getInitialData = () => FIELDS.reduce((data, f) => ({
+const getInitialData = () => Fields.reduce((data, f) => ({
   ...data,
   [f.key]: {
     value: '',
@@ -130,7 +95,7 @@ class SignUpModal extends React.Component {
   }
 
   valid() {
-    const fieldHasErrorMessage = FIELDS.find((f) => this.getErrorMessage(f));
+    const fieldHasErrorMessage = Fields.find((f) => this.getErrorMessage(f));
 
     return !fieldHasErrorMessage;
   }
@@ -175,7 +140,7 @@ class SignUpModal extends React.Component {
                 <ErrorMessage>{errorMessage}</ErrorMessage>
               </FormItem>
             )}
-            {FIELDS.map((f) => (
+            {Fields.map((f) => (
               <FormItem 
                 key={f.key} 
                 htmlFor={f.key}
