@@ -1,13 +1,22 @@
 import styled, { css } from 'styled-components';
 
 const NavItem = styled.div`
-  padding: 18px 14px;
-  border-top: 2px solid transparent;
-  border-bottom: 2px solid transparent;
+  padding: 20px 14px;
   
   ${(props) => props.indictable && css`
     &:hover {
-      border-top-color: #008fb4;
+      position: relative;
+  
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        top: 0;
+        height: 2px;
+        background-color: #008fb4;
+      }
     }
   `}
 

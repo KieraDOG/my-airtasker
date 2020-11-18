@@ -14,8 +14,7 @@ const Layout = styled.div`
 const NakedButton = styled.button`
   background-color: transparent;
   outline: 0;
-  border-left: 0;
-  border-right: 0;
+  border: 0;
   cursor: pointer;
   text-align: left;
 `;
