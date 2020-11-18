@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import NavItem from '../NavItem';
 import Button from '../../../Button';
 import NakedButton from '../../../NakedButton';
-import LogInModal from './components/LogInModal';
-import SignUpModal from './components/SignUpModal';
+import AuthenticationContext from '../../../AuthenticationContext';
+import withAuthenticationModals from '../../../withAuthenticationModals';
+import NavItem from '../NavItem';
 
 const Layout = styled.div`
   display: flex;
@@ -36,31 +36,21 @@ const BecomeATasker = styled(NavItem)`
 // 4. 创建 handler, 理论上讲，每个 state 都带有自己的 handler
 // 5. 将 state 和 handler 作用于 render
 
-class Authentication extends React.Component {
-  constructor(props) {
-    super(props);
+// - Authentication 需要渲染 Modal?
+// 如果别的地方也需要渲染 Modal 呢？
 
-    this.state = {
-      showModal: null,
-    };
-  }
+// - withAuthenticationModals [HOC] { user }
+//  - Component(Authentication)
+//  - LogInModal
+//  - SingUpModal
+//  - ForgetPasswordModal
 
-  setShowLogInModal() {
-    this.setState({ showModal: 'LOG_IN' });
-  }
-
-  setShowSignUpModal() {
-    this.setState({ showModal: 'SIGN_UP' });
-  }
-
-  setCloseModal() {
-    this.setState({ showModal: null });
-  }
-
-  render() {
-    const { showModal } = this.state;
-
-    return (
+const Authentication = ({
+  setShowLogInModal,
+  setShowSignUpModal,
+}) => (
+  <AuthenticationContext.Consumer>
+    {({ user }) => (
       <Layout>
         {/* <Dropdown 
           visible={showModal === 'SIGN_UP'}
@@ -83,38 +73,36 @@ class Authentication extends React.Component {
             Sign up
           </NavItem>
         </Dropdown> */}
-        <NavItem 
-            as={NakedButton} 
-            highlight
-            onClick={() => showModal === 'SIGN_UP' ? this.setCloseModal() : this.setShowSignUpModal()}
-          >
-            Sign up
+        {user ? (
+          <NavItem>
+            Dashboard
           </NavItem>
-        {showModal === 'SIGN_UP' && (
-          <SignUpModal 
-            onClose={() => this.setCloseModal()} 
-            onLogIn={() => this.setShowLogInModal()}
-          />
-        )}
-        <NavItem 
-          as={NakedButton} 
-          highlight 
-          onClick={() => this.setShowLogInModal()}
-        >
-          Log in
-        </NavItem>
-        {showModal === 'LOG_IN' && (
-          <LogInModal 
-            onClose={() => this.setCloseModal()} 
-            onSignUp={() => this.setShowSignUpModal()}
-          />
+        ) : (
+          <React.Fragment>
+            <NavItem 
+              as={NakedButton} 
+              highlight
+              onClick={setShowSignUpModal}
+            >
+              Sign up
+            </NavItem>
+            <NavItem 
+              as={NakedButton} 
+              highlight 
+              onClick={setShowLogInModal}
+            >
+              Log in
+            </NavItem>
+          </React.Fragment>
         )}
         <BecomeATasker>
           <Button size="sm" variant="secondary">Become a Tasker</Button>
         </BecomeATasker>
       </Layout>
-    );
-  }
-}
+    )}
+  </AuthenticationContext.Consumer>
+);
 
-export default Authentication;
+const WithAuthenticationModalsAuthentication = withAuthenticationModals(Authentication);
+
+export default WithAuthenticationModalsAuthentication;

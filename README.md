@@ -121,8 +121,8 @@ Connect API
 Class 2
 
 HOC (Higher Order Components)
-React Context
 JWT
+React Context
 
 Class 3
 

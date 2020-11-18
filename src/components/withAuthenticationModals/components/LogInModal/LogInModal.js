@@ -1,16 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
 import validator from 'validator';
-import logIn from '../../../../../../apis/logIn';
-import Modal from '../../../../../Modal';
-import Button from '../../../../../Button';
-import TextInput from '../../../../../TextInput';
-import FormItem from '../../../../../FormItem';
-import ErrorMessage from '../../../../../ErrorMessage';
+import logIn from '../../../../apis/logIn';
+import Modal from '../../../Modal';
+import Button from '../../../Button';
+import TextInput from '../../../TextInput';
+import FormItem from '../../../FormItem';
+import ErrorMessage from '../../../ErrorMessage';
+import withForm from '../../../withForm';
+
+// HOC: Higher Order Component 高阶组件 component render component
+// HOF: Higher Order Function 高阶函数 function return function
+
+// <Button /> -> jsx
+// <Foo /> -> <Button /> -> jsx
+
+// scope
+
+// Foo // 职责A
+// state 相关
+
+// Button // 职责B
+// 渲染方式
+
+// setData(key) -> event callback -> fn
+
+/**
+ * 1. LogInModal SignUpModal (80% 相似)
+ * 2. ForgetPasswordModal (Copy LogInModal -> 改 20% 代码)
+ * 3. ? (component, props, state)
+ * 
+ *  */
 
 const Footer = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const ForgetPassword = styled.div`
+  text-align: right;
 `;
 
 const FIELDS = [{
@@ -31,21 +59,11 @@ const FIELDS = [{
   }],
 }];
 
-const getInitialData = () => FIELDS.reduce((data, f) => ({
-  ...data,
-  [f.key]: {
-    value: '',
-    dirty: false,
-  },
-}), {});
-
 class LogInModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: getInitialData(),
-      formDirty: false,
       errorMessage: '',
     };
   }
@@ -55,52 +73,22 @@ class LogInModal extends React.Component {
       errorMessage: message,
     });
   }
- 
-  setFormDirty(value) {
-    this.setState({
-      formDirty: value,
-    });
-  }
-
-  setData(key) {
-    return (event) => {
-      this.setState((prevState) => ({
-        data: {
-          ...prevState.data,
-          [key]: {
-            value: event.target.value,
-            dirty: true,
-          },
-        },
-      }));
-    };
-  }
-
-  getErrorMessage(field) {
-    const { data } = this.state;
-    const { key, validations } = field;
-
-    const { value } = data[key];
-    const invalidValidation = validations.find((v) => !v.validator(value, data));
-
-    if (!invalidValidation) {
-      return null;
-    }
-
-    return invalidValidation.message;
-  }
-
-  valid() {
-    const fieldHasErrorMessage = FIELDS.find((f) => this.getErrorMessage(f));
-
-    return !fieldHasErrorMessage;
-  }
 
   render() {
-    const { onClose, onSignUp } = this.props;
-    const { data, formDirty, errorMessage } = this.state;
-    
-    const valid = this.valid();
+    const { errorMessage } = this.state;
+
+    const { 
+      onClose, 
+      onLogIn,
+      onSignUp, 
+      onForgetPassword,
+      data, 
+      formDirty, 
+      setData,
+      submit,
+      valid,
+      getErrorMessage,
+    } = this.props;
     
     return (
       <Modal
@@ -108,20 +96,15 @@ class LogInModal extends React.Component {
         title="Log in"
         body={(
           <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              
-              this.setFormDirty(true);
-
-              if (!valid) {
-                return;
-              }
-
+            onSubmit={submit(() => {
               logIn({
                 email: data.email.value,
                 password: data.password.value
               })
-                .then(() => onClose())
+                .then((data) => {
+                  onClose();
+                  onLogIn(data);
+                })
                 .catch((error) => {
                   const message = error.response && {
                     404: 'Email and password does not match, please try again',
@@ -129,7 +112,7 @@ class LogInModal extends React.Component {
                   
                   this.setErrorMessage(message || 'Something wrong, please try again later');
                 });
-            }}
+            })}
           >
             {errorMessage && (
               <FormItem>
@@ -141,11 +124,18 @@ class LogInModal extends React.Component {
                 key={f.key} 
                 htmlFor={f.key}
                 label={f.label}
-                error={(formDirty || data[f.key].dirty) && this.getErrorMessage(f)}
+                error={(formDirty || data[f.key].dirty) && getErrorMessage(f)}
               >
-                <TextInput id={f.key} type={f.type} onChange={this.setData(f.key)} />
+                <TextInput id={f.key} type={f.type} onChange={setData(f.key)} />
               </FormItem>
             ))}
+            <FormItem>
+              <ForgetPassword>
+                <Button type="button" variant="link" onClick={onForgetPassword}>
+                  Forget password?
+                </Button>
+              </ForgetPassword>
+            </FormItem>
             <FormItem>
               <Button 
                 disabled={!valid}
@@ -169,4 +159,6 @@ class LogInModal extends React.Component {
   }
 }
 
-export default LogInModal;
+const WithFormLogInModal = withForm(FIELDS)(LogInModal);
+
+export default WithFormLogInModal;
