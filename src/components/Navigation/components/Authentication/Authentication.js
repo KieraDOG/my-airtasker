@@ -2,21 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import NavItem from '../NavItem';
 import Button from '../../../Button';
-import Dropdown from '../../../Dropdown';
+import NakedButton from '../../../NakedButton';
 import LogInModal from './components/LogInModal';
 import SignUpModal from './components/SignUpModal';
 
 const Layout = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const NakedButton = styled.button`
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  cursor: pointer;
-  text-align: left;
 `;
 
 const BecomeATasker = styled(NavItem)`

@@ -1,7 +1,7 @@
 import styled,  { css } from 'styled-components';
+import NakedButton from '../NakedButton';
 
-const Button = styled.button`
-  border: 0;
+const Button = styled(NakedButton)`
   padding: 6px 12px;
   border-radius: 200px;
   cursor: pointer;

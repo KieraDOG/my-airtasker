@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import NakedButton from '../NakedButton';
 
 const Overlay = styled.div`
   position: fixed;
@@ -42,12 +43,9 @@ const Title = styled.div`
   font-size: 22px;
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled(NakedButton)`
   font-size: 18px;
-  background: transparent;
   padding: 0;
-  border: 0;
-  outline: 0;
   position: absolute;
   right: ${HORIZONTAL_GAP};
   top: 0;
