@@ -8,6 +8,7 @@ import TextInput from '../../../TextInput';
 import FormItem from '../../../FormItem';
 import ErrorMessage from '../../../ErrorMessage';
 import withForm from '../../../withForm';
+import { withAuthentication } from '../../../AuthenticationProvider';
 
 // HOC: Higher Order Component 高阶组件 component render component
 // HOF: Higher Order Function 高阶函数 function return function
@@ -78,8 +79,8 @@ class LogInModal extends React.Component {
     const { errorMessage } = this.state;
 
     const { 
+      authentication,
       onClose, 
-      onLogIn,
       onSignUp, 
       onForgetPassword,
       data, 
@@ -103,7 +104,7 @@ class LogInModal extends React.Component {
               })
                 .then((data) => {
                   onClose();
-                  onLogIn(data);
+                  authentication.setUser(data);
                 })
                 .catch((error) => {
                   const message = error.response && {
@@ -159,6 +160,7 @@ class LogInModal extends React.Component {
   }
 }
 
-const WithFormLogInModal = withForm(FIELDS)(LogInModal);
+const WithAuthenticationLogInModal = withAuthentication(LogInModal);
+const WithFormLogInModal = withForm(FIELDS)(WithAuthenticationLogInModal);
 
 export default WithFormLogInModal;

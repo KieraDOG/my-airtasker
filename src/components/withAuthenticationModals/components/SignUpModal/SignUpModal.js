@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import signUp from '../../../../apis/signUp';
 import Modal from '../../../Modal';
+import { withAuthentication } from '../../../AuthenticationProvider';
 import Button from '../../../Button';
 import TextInput from '../../../TextInput';
 import FormItem from '../../../FormItem';
@@ -33,8 +34,8 @@ class SignUpModal extends React.Component {
     const { errorMessage } = this.state;
 
     const { 
+      authentication,
       onClose, 
-      onSignUp,
       onLogIn, 
       data, 
       formDirty, 
@@ -57,7 +58,7 @@ class SignUpModal extends React.Component {
               })
                 .then((data) => {
                   onClose();
-                  onSignUp(data);
+                  authentication.setUser(data);
                 })
                 .catch((error) => {
                   const message = error.response && {
@@ -116,6 +117,7 @@ class SignUpModal extends React.Component {
 // const WithTintCar = withTint(myTint)(MyCar);
 // const WithModCar = withMod(mod)(WithTintCar);
 
-const WithFormSignUpModal = withForm(Fields)(SignUpModal);
+const WithAuthenticationSignUpModal = withAuthentication(SignUpModal);
+const WithFormSignUpModal = withForm(Fields)(WithAuthenticationSignUpModal);
 
 export default WithFormSignUpModal;

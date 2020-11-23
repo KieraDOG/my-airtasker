@@ -42,39 +42,33 @@ const withAuthenticationModals = (Component) => {
       const { showModal } = this.state;
 
       return (
-        <AuthenticationContext.Consumer>
-          {({ setUser }) => (
-            <React.Fragment>
-              <Component 
-                {...this.props}
-                setShowLogInModal={this.setShowLogInModal}
-                setShowSignUpModal={this.setShowSignUpModal}
-                setShowForgetPasswordModal={this.setShowForgetPasswordModal}
-              />
-              {showModal === 'SIGN_UP' && (
-                <SignUpModal 
-                  onClose={() => this.setCloseModal()} 
-                  onSignUp={(data) => setUser(data)}
-                  onLogIn={() => this.setShowLogInModal()}
-                />
-              )}
-              {showModal === 'LOG_IN' && (
-                <LogInModal 
-                  onClose={() => this.setCloseModal()} 
-                  onLogIn={(data) => setUser(data)}
-                  onSignUp={() => this.setShowSignUpModal()}
-                  onForgetPassword={() => this.setShowForgetPasswordModal()}
-                />
-              )}
-              {showModal === 'FORGET_PASSWORD' && (
-                <ForgetPasswordModal 
-                  onClose={() => this.setCloseModal()} 
-                  onSignUp={() => this.setShowSignUpModal()}
-                />
-              )}
-            </React.Fragment>
+        <React.Fragment>
+          <Component 
+            {...this.props}
+            setShowLogInModal={this.setShowLogInModal}
+            setShowSignUpModal={this.setShowSignUpModal}
+            setShowForgetPasswordModal={this.setShowForgetPasswordModal}
+          />
+          {showModal === 'SIGN_UP' && (
+            <SignUpModal 
+              onClose={() => this.setCloseModal()} 
+              onLogIn={() => this.setShowLogInModal()}
+            />
           )}
-        </AuthenticationContext.Consumer>
+          {showModal === 'LOG_IN' && (
+            <LogInModal 
+              onClose={() => this.setCloseModal()} 
+              onSignUp={() => this.setShowSignUpModal()}
+              onForgetPassword={() => this.setShowForgetPasswordModal()}
+            />
+          )}
+          {showModal === 'FORGET_PASSWORD' && (
+            <ForgetPasswordModal 
+              onClose={() => this.setCloseModal()} 
+              onSignUp={() => this.setShowSignUpModal()}
+            />
+          )}
+        </React.Fragment>
       )
     }
   }

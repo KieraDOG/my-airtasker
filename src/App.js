@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Navigation from './components/Navigation';
 import Banner from './components/Banner';
-import AuthenticationContext from './components/AuthenticationContext';
-import getAuth from './apis/getAuth';
+import AuthenticationProvider from './components/AuthenticationProvider';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -30,47 +29,13 @@ const Wrapper = styled.div`
 //    - Section
 //      - WithAuthenticationModalsFoo
 
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      user: null,
-    }
-    
-    this.setUser = this.setUser.bind(this);
-  }
-
-  componentDidMount() {
-    getAuth()
-      .then((data) => this.setUser(data))
-      .catch(() => {});
-  }
-
-  setUser(value) {
-    this.setState({
-      user: value,
-    });
-  }
-
-  render() {
-    const { user } = this.state;
-
-    const authentication = {
-      user,
-      setUser: this.setUser,
-    };
-
-    return (
-      <AuthenticationContext.Provider value={authentication}>
-        <Wrapper>
-          <Navigation />
-          <Banner />
-        </Wrapper>
-      </AuthenticationContext.Provider>
-    );
-  }
-}
+const App = () => (
+  <AuthenticationProvider>
+    <Wrapper>
+      <Navigation />
+      <Banner />
+    </Wrapper>
+  </AuthenticationProvider>
+);
 
 export default App;

@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '../../../Button';
 import NakedButton from '../../../NakedButton';
-import AuthenticationContext from '../../../AuthenticationContext';
+import { withAuthentication } from '../../../AuthenticationProvider';
 import withAuthenticationModals from '../../../withAuthenticationModals';
 import NavItem from '../NavItem';
+import UserDropdown from './components/UserDropdown';
 
 const Layout = styled.div`
   display: flex;
@@ -46,63 +47,38 @@ const BecomeATasker = styled(NavItem)`
 //  - ForgetPasswordModal
 
 const Authentication = ({
+  authentication,
   setShowLogInModal,
   setShowSignUpModal,
 }) => (
-  <AuthenticationContext.Consumer>
-    {({ user }) => (
-      <Layout>
-        {/* <Dropdown 
-          visible={showModal === 'SIGN_UP'}
-          items={[{
-            key: 'dashboard',
-            content: 'Dashboard'
-          }, {
-            key: 'profile',
-            content: 'Profile',
-          }, {
-            key: 'logout',
-            content: 'Logout',
-          }]}
+  <Layout>
+    {authentication.user ? (
+      <UserDropdown />
+    ) : (
+      <React.Fragment>
+        <NavItem 
+          as={NakedButton} 
+          highlight
+          onClick={setShowSignUpModal}
         >
-          <NavItem 
-            as={NakedButton} 
-            highlight
-            onClick={() => showModal === 'SIGN_UP' ? this.setCloseModal() : this.setShowSignUpModal()}
-          >
-            Sign up
-          </NavItem>
-        </Dropdown> */}
-        {user ? (
-          <NavItem>
-            Dashboard
-          </NavItem>
-        ) : (
-          <React.Fragment>
-            <NavItem 
-              as={NakedButton} 
-              highlight
-              onClick={setShowSignUpModal}
-            >
-              Sign up
-            </NavItem>
-            <NavItem 
-              as={NakedButton} 
-              highlight 
-              onClick={setShowLogInModal}
-            >
-              Log in
-            </NavItem>
-          </React.Fragment>
-        )}
-        <BecomeATasker>
-          <Button size="sm" variant="secondary">Become a Tasker</Button>
-        </BecomeATasker>
-      </Layout>
+          Sign up
+        </NavItem>
+        <NavItem 
+          as={NakedButton} 
+          highlight 
+          onClick={setShowLogInModal}
+        >
+          Log in
+        </NavItem>
+      </React.Fragment>
     )}
-  </AuthenticationContext.Consumer>
+    <BecomeATasker>
+      <Button size="sm" variant="secondary">Become a Tasker</Button>
+    </BecomeATasker>
+  </Layout>
 );
 
-const WithAuthenticationModalsAuthentication = withAuthenticationModals(Authentication);
+const WithAuthenticationAuthentication = withAuthentication(Authentication);
+const WithAuthenticationModalsAuthentication = withAuthenticationModals(WithAuthenticationAuthentication);
 
 export default WithAuthenticationModalsAuthentication;
