@@ -1,5 +1,5 @@
 import React from 'react';
-import { withAuthentication } from '../../../../../AuthenticationProvider';
+import { connect } from 'react-redux';
 import Dropdown from '../../../../../Dropdown';
 import NakedButton from '../../../../../NakedButton';
 import NavItem from '../../../NavItem';
@@ -56,6 +56,10 @@ class UserDropdown extends React.Component {
   }
 }
 
-const WithAuthenticationUserDropdown = withAuthentication(UserDropdown);
+const mapStateToProps = (state) => ({
+  authentication: state.authentication,
+});
 
-export default WithAuthenticationUserDropdown;
+const ConnectedUserDropdown = connect(mapStateToProps)(UserDropdown);
+
+export default ConnectedUserDropdown;

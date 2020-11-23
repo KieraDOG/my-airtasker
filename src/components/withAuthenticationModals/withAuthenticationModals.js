@@ -2,7 +2,6 @@ import React from 'react';
 import LogInModal from './components/LogInModal';
 import SignUpModal from './components/SignUpModal';
 import ForgetPasswordModal from './components/ForgetPasswordModal';
-import AuthenticationContext from '../AuthenticationContext';
 
 // persist 登录状态, refresh, tabs close, tabs change
 // localStorage

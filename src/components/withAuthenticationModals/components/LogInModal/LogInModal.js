@@ -1,14 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import validator from 'validator';
 import logIn from '../../../../apis/logIn';
-import Modal from '../../../Modal';
 import Button from '../../../Button';
-import TextInput from '../../../TextInput';
-import FormItem from '../../../FormItem';
 import ErrorMessage from '../../../ErrorMessage';
+import FormItem from '../../../FormItem';
+import Modal from '../../../Modal';
+import TextInput from '../../../TextInput';
 import withForm from '../../../withForm';
-import { withAuthentication } from '../../../AuthenticationProvider';
+import logInCreator from '../../../../redux/authentication/actions/logInCreator';
 
 // HOC: Higher Order Component 高阶组件 component render component
 // HOF: Higher Order Function 高阶函数 function return function
@@ -60,107 +61,99 @@ const FIELDS = [{
   }],
 }];
 
-class LogInModal extends React.Component {
-  constructor(props) {
-    super(props);
+const LogInModal = ({ 
+  authentication,
+  dispatchLogIn,
+  onClose, 
+  onSignUp, 
+  onForgetPassword,
+  data, 
+  formDirty, 
+  setData,
+  submit,
+  valid,
+  getErrorMessage,
+}) => (
+  <Modal
+    onClose={onClose}
+    title="Log in"
+    body={(
+      <form
+        onSubmit={submit(() => {
+          dispatchLogIn({
+            email: data.email.value,
+            password: data.password.value
+          });
 
-    this.state = {
-      errorMessage: '',
-    };
-  }
-
-  setErrorMessage(message) {
-    this.setState({
-      errorMessage: message,
-    });
-  }
-
-  render() {
-    const { errorMessage } = this.state;
-
-    const { 
-      authentication,
-      onClose, 
-      onSignUp, 
-      onForgetPassword,
-      data, 
-      formDirty, 
-      setData,
-      submit,
-      valid,
-      getErrorMessage,
-    } = this.props;
-    
-    return (
-      <Modal
-        onClose={onClose}
-        title="Log in"
-        body={(
-          <form
-            onSubmit={submit(() => {
-              logIn({
-                email: data.email.value,
-                password: data.password.value
-              })
-                .then((data) => {
-                  onClose();
-                  authentication.setUser(data);
-                })
-                .catch((error) => {
-                  const message = error.response && {
-                    404: 'Email and password does not match, please try again',
-                  }[error.response.status];
-                  
-                  this.setErrorMessage(message || 'Something wrong, please try again later');
-                });
-            })}
+          // logIn({
+          //   email: data.email.value,
+          //   password: data.password.value
+          // })
+          //   .then((data) => {
+          //     onClose();
+          //     dispatchLogIn(data);
+          //   })
+          //   .catch((error) => {
+          //     const message = error.response && {
+          //       404: 'Email and password does not match, please try again',
+          //     }[error.response.status];
+              
+          //     this.setErrorMessage(message || 'Something wrong, please try again later');
+          //   });
+        })}
+      >
+        {authentication.message && (
+          <FormItem>
+            <ErrorMessage>{authentication.message}</ErrorMessage>
+          </FormItem>
+        )}
+        {FIELDS.map((f) => (
+          <FormItem 
+            key={f.key} 
+            htmlFor={f.key}
+            label={f.label}
+            error={(formDirty || data[f.key].dirty) && getErrorMessage(f)}
           >
-            {errorMessage && (
-              <FormItem>
-                <ErrorMessage>{errorMessage}</ErrorMessage>
-              </FormItem>
-            )}
-            {FIELDS.map((f) => (
-              <FormItem 
-                key={f.key} 
-                htmlFor={f.key}
-                label={f.label}
-                error={(formDirty || data[f.key].dirty) && getErrorMessage(f)}
-              >
-                <TextInput id={f.key} type={f.type} onChange={setData(f.key)} />
-              </FormItem>
-            ))}
-            <FormItem>
-              <ForgetPassword>
-                <Button type="button" variant="link" onClick={onForgetPassword}>
-                  Forget password?
-                </Button>
-              </ForgetPassword>
-            </FormItem>
-            <FormItem>
-              <Button 
-                disabled={!valid}
-                block 
-                size="lg"
-                variant="success"
-              >
-                LOG IN
-              </Button>
-            </FormItem>
-          </form>
-        )}
-        footer={(
-          <Footer>
-            <div>Don't have a account?</div>
-            <Button variant="link" onClick={onSignUp}>Sign up</Button>
-          </Footer>
-        )}
-      />
-    );
-  }
-}
+            <TextInput id={f.key} type={f.type} onChange={setData(f.key)} />
+          </FormItem>
+        ))}
+        <FormItem>
+          <ForgetPassword>
+            <Button type="button" variant="link" onClick={onForgetPassword}>
+              Forget password?
+            </Button>
+          </ForgetPassword>
+        </FormItem>
+        <FormItem>
+          <Button 
+            disabled={!valid}
+            block 
+            size="lg"
+            variant="success"
+          >
+            LOG IN
+          </Button>
+        </FormItem>
+      </form>
+    )}
+    footer={(
+      <Footer>
+        <div>Don't have a account?</div>
+        <Button variant="link" onClick={onSignUp}>Sign up</Button>
+      </Footer>
+    )}
+  />
+);
 
-const WithAuthenticationLogInModal = withAuthentication(LogInModal);
-const WithFormLogInModal = withForm(FIELDS)(WithAuthenticationLogInModal);
+const mapStateToProps = (state) => ({
+  authentication: state.authentication,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchLogIn: (data) => dispatch(logInCreator(data)),
+})
+
+const ConnectedLogInModal = connect(mapStateToProps, mapDispatchToProps)(LogInModal);
+const WithFormLogInModal = withForm(FIELDS)(ConnectedLogInModal);
 
 export default WithFormLogInModal;

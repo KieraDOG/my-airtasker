@@ -1,8 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Button from '../../../Button';
 import NakedButton from '../../../NakedButton';
-import { withAuthentication } from '../../../AuthenticationProvider';
 import withAuthenticationModals from '../../../withAuthenticationModals';
 import NavItem from '../NavItem';
 import UserDropdown from './components/UserDropdown';
@@ -78,7 +78,11 @@ const Authentication = ({
   </Layout>
 );
 
-const WithAuthenticationAuthentication = withAuthentication(Authentication);
-const WithAuthenticationModalsAuthentication = withAuthenticationModals(WithAuthenticationAuthentication);
+const mapStateToProps = (state) => ({
+  authentication: state.authentication,
+});
+
+const ConnectedAuthentication = connect(mapStateToProps)(Authentication);
+const WithAuthenticationModalsAuthentication = withAuthenticationModals(ConnectedAuthentication);
 
 export default WithAuthenticationModalsAuthentication;
