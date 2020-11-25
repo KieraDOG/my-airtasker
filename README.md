@@ -152,3 +152,28 @@ Out of MVP
 MVP - 最小价值产品 -> MVP 功能 -> MVP 功能 -> ... -> 大型商业化项目
 Nothing Prefect
 
+
+1. Assertion
+2. Unit test (Unit)
+3. runner + lib
+
+- 就近维护
+tests 和对应的代码放在同一层目录里
+
+CICD
+
+Continues Integration, Continues Deployment
+可持续集成，可持续部署
+
+---
+
+当有代码 merge 到 develop 的时候, 就说明这个代码 ready to deployment
+假如有个监听器，监听 merge develop， 有 merge 就自动跑部署代码
+
+```
+$ yarn build
+$ $ aws s3 rm s3://my-airtasker --recursive
+$ aws s3 cp build s3://my-airtasker --recursive
+```
+
+自动化部署

@@ -29,6 +29,8 @@ const Wrapper = styled.div`
 //    - Section
 //      - WithAuthenticationModalsFoo
 
+// 责任？
+// 入口组装的责任
 const App = () => (
   <AuthenticationProvider>
     <Wrapper>

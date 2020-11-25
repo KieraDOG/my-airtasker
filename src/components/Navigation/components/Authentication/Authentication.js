@@ -46,7 +46,9 @@ const BecomeATasker = styled(NavItem)`
 //  - SingUpModal
 //  - ForgetPasswordModal
 
-const Authentication = ({
+// 判断 authentication.user 来区分是否显示 Sign Up 和 Log In 或者 UserDropdown
+// 点击相应的 button，去调用相应的方法
+export const Authentication = ({
   authentication,
   setShowLogInModal,
   setShowSignUpModal,
@@ -78,7 +80,7 @@ const Authentication = ({
   </Layout>
 );
 
-const mapStateToProps = (state) => ({
+export const mapStateToProps = (state) => ({
   authentication: state.authentication,
 });
 

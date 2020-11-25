@@ -1,20 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../Button';
-import withAuthenticationModals from '../withAuthenticationModals';
 
 const Layout = styled.div`
   padding: 36px 0;
 `;
 
-const Banner = ({
-  setShowSignUpModal,
-}) => (
+const Banner = () => (
   <Layout>
-    <Button variant="primary" onClick={setShowSignUpModal}>Join us now</Button>
+    My Airtasker
   </Layout>
 );
 
-const WithAuthenticationModalsBanner = withAuthenticationModals(Banner);
-
-export default WithAuthenticationModalsBanner;
+export default Banner;
