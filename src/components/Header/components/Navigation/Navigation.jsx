@@ -21,7 +21,7 @@ const Toggler = styled.div`
 const Navigation = () => (
   <Layout>
     <HeaderItem>
-      <Button variant="primary">Post a task</Button>
+      <Button size="sm" variant="primary">Post a task</Button>
     </HeaderItem>
     <HeaderItem as={Toggler} highlight>
       Categories
