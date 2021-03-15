@@ -14,6 +14,16 @@ const Footer = styled.div`
   justify-content: space-between;
 `;
 
+// 根据用户的输入 (onChange)，submit form (onSubmit) 的时候做数据验证，如果失败，显示错误信息，成功则把相应的数据发送给后端(console.log)
+// 数据是不是动态的?
+// state
+
+// class SignUpModal extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+// }
+
 const SignUpModal = ({
   onClose,
   onLogin,

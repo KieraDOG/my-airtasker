@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../../../Button';
+import Dropdown from '../../../Dropdown';
 import HeaderItem from '../HeaderItem';
 
 const Layout = styled.div`
@@ -17,19 +18,6 @@ const Link = styled.a`
 const Toggler = styled.div`
   cursor: pointer;
   position: relative;
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  left: 0;
-  background: white;
-  border: 1px solid #dadada;
-  border-radius: 4px;
-  color: initial;
-  padding: 12px 16px;
-  width: 200px;
-  cursor: initial;
-  top: 45px;
 `;
 
 class Navigation extends React.Component {
