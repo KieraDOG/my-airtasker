@@ -27,7 +27,7 @@ const Container = styled.div`
 const CloseButton = styled(Button)`
   position: absolute;
   right: 16px;
-  top: 24px;
+  top: 16px;
 `;
 
 const Header = styled.div`
