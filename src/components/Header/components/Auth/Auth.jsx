@@ -23,7 +23,7 @@ class Auth extends React.Component {
     super(props);
 
     this.state = {
-      currentShownModal: MODAL.EMPTY,
+      currentShownModal: MODAL.SIGN_UP,
     };
   }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { isEmail } from 'validator';
 import Button from '../../../../../Button';
 import Modal from '../../../../../Modal';
 import Input from '../../../../../Input';
@@ -14,17 +15,57 @@ const Footer = styled.div`
   justify-content: space-between;
 `;
 
-// 根据用户的输入 (onChange)，submit form (onSubmit) 的时候做数据验证，如果失败，显示错误信息，成功则把相应的数据发送给后端(console.log)
-// 数据验证
-// 根据数据，做相应的验证，比如 email 不能为空，如果验证失败，显示相应的错误信息，以及阻止 submit form
-// 数据是不是动态的?
-// state
+const ErrorMessage = styled.div`
+  color: rgb(231, 82, 69);
+  font-size: 12px;
+  margin-top: 8px;
+  font-weight: bold;
+`;
+
+const FIELD = {
+  email: {
+    label: 'Email',
+    type: 'text',
+    validations: [{
+      validator: (data) => isEmail(data.email),
+      errorMessage: 'Please input a valid email address',
+    }, {
+      validator: (data) => !!data.email,
+      errorMessage: 'Please input your email',
+    }],
+  },
+  password: {
+    label: 'Password',
+    type: 'password',
+    validations: [{
+      validator: (data) => !!data.password,
+      errorMessage: 'Please input your password',
+    }],
+  },
+  confirmPassword: {
+    label: 'Confirm password',
+    type: 'password',
+    validations: [{
+      validator: (data) => data.password === data.confirmPassword,
+      errorMessage: 'Please confirm your password',
+    }, {
+      validator: (data) => !!data.confirmPassword,
+      errorMessage: 'Please input your confirm password',
+    }],
+  },
+};
 
 class SignUpModal extends React.Component {
   constructor(props) {
     super(props);
 
+    // 最小且完整
+    // errorMessage 的状态改变，一定来自于 data 状态的改变
+    // 衍生状态，Derived State
+    // 一个状态可以由另外一个状态计算出来
+    // Source of truth
     this.state = {
+      isFormTouched: false,
       data: {
         email: '',
         password: '',
@@ -33,6 +74,34 @@ class SignUpModal extends React.Component {
     };
 
     this.handleDataChange = this.handleDataChange.bind(this);
+    this.handleFormTouch = this.handleFormTouch.bind(this);
+  }
+
+  getError() {
+    const { data } = this.state;
+
+    const error = {};
+
+    Object.keys(FIELD).forEach((key) => {
+      const { validations } = FIELD[key];
+      validations.forEach(({ validator, errorMessage }) => {
+        const valid = validator(data);
+
+        if (valid) {
+          return;
+        }
+
+        error[key] = errorMessage;
+      });
+    });
+
+    return error;
+  }
+
+  handleFormTouch() {
+    this.setState({
+      isFormTouched: true,
+    });
   }
 
   handleDataChange(key) {
@@ -52,7 +121,9 @@ class SignUpModal extends React.Component {
 
   render() {
     const { onClose, onLogin } = this.props;
-    const { data } = this.state;
+    const { isFormTouched } = this.state;
+
+    const error = this.getError();
 
     return (
       <Modal
@@ -73,27 +144,21 @@ class SignUpModal extends React.Component {
           onSubmit={(event) => {
             event.preventDefault();
 
-            console.log(data);
+            this.handleFormTouch();
           }}
         >
-          <FormItem label="Email">
-            <Input
-              type="text"
-              onChange={this.handleDataChange('email')}
-            />
-          </FormItem>
-          <FormItem label="Password">
-            <Input
-              type="password"
-              onChange={this.handleDataChange('password')}
-            />
-          </FormItem>
-          <FormItem label="Confirm password">
-            <Input
-              type="password"
-              onChange={this.handleDataChange('confirmPassword')}
-            />
-          </FormItem>
+          {Object.keys(FIELD).map((key) => {
+            const { label, type } = FIELD[key];
+
+            const isFieldOnError = error[key] && isFormTouched;
+
+            return (
+              <FormItem key={key} label={label}>
+                <Input type={type} error={isFieldOnError} onChange={this.handleDataChange(key)} />
+                {isFieldOnError && (<ErrorMessage>{error[key]}</ErrorMessage>)}
+              </FormItem>
+            );
+          })}
           <FormItem>
             <FullWidthButton variant="success">Sign up</FullWidthButton>
           </FormItem>
