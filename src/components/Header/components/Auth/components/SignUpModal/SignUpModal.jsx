@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { isEmail } from 'validator';
+import axios from 'axios';
 import Button from '../../../../../Button';
 import Modal from '../../../../../Modal';
 import Input from '../../../../../Input';
@@ -20,6 +21,14 @@ const ErrorMessage = styled.div`
   font-size: 12px;
   margin-top: 8px;
   font-weight: bold;
+`;
+
+const ServerErrorMessage = styled.div`
+  background: rgb(231, 82, 69);
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  margin-bottom: 18px;
 `;
 
 const FIELD = {
@@ -59,22 +68,23 @@ class SignUpModal extends React.Component {
   constructor(props) {
     super(props);
 
-    // 最小且完整
-    // errorMessage 的状态改变，一定来自于 data 状态的改变
-    // 衍生状态，Derived State
-    // 一个状态可以由另外一个状态计算出来
-    // Source of truth
     this.state = {
-      isFormTouched: false,
       data: {
         email: '',
         password: '',
         confirmPassword: '',
       },
+      isFormTouched: false,
+      isServerRequesting: false,
+      serverResponse: undefined,
     };
 
     this.handleDataChange = this.handleDataChange.bind(this);
     this.handleFormTouch = this.handleFormTouch.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleServerResponse = this.handleServerResponse.bind(this);
+    this.handleServerRequest = this.handleServerRequest.bind(this);
+    this.validateForm = this.validateForm.bind(this);
   }
 
   getError() {
@@ -98,6 +108,18 @@ class SignUpModal extends React.Component {
     return error;
   }
 
+  handleServerResponse(serverResponse) {
+    this.setState({
+      serverResponse,
+    });
+  }
+
+  handleServerRequest(isServerRequesting) {
+    this.setState({
+      isServerRequesting,
+    });
+  }
+
   handleFormTouch() {
     this.setState({
       isFormTouched: true,
@@ -119,9 +141,40 @@ class SignUpModal extends React.Component {
     };
   }
 
+  validateForm() {
+    const error = this.getError();
+
+    return Object.keys(error).length === 0;
+  }
+
+  handleFormSubmit(event) {
+    const { data } = this.state;
+    const { onClose } = this.props;
+
+    event.preventDefault();
+
+    this.handleFormTouch();
+    this.handleServerResponse();
+
+    const valid = this.validateForm();
+    if (!valid) {
+      return;
+    }
+
+    this.handleServerRequest(true);
+
+    axios
+      .post('http://localhost:8000/auth/sign-up', data)
+      .then(() => onClose())
+      .catch((error) => {
+        this.handleServerRequest(false);
+        this.handleServerResponse(error.response);
+      });
+  }
+
   render() {
     const { onClose, onLogin } = this.props;
-    const { isFormTouched } = this.state;
+    const { isFormTouched, serverResponse, isServerRequesting } = this.state;
 
     const error = this.getError();
 
@@ -138,15 +191,16 @@ class SignUpModal extends React.Component {
               Log in
             </Button>
           </Footer>
-      )}
+        )}
       >
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-
-            this.handleFormTouch();
-          }}
-        >
+        {serverResponse && (
+          <ServerErrorMessage>
+            {{
+              409: 'Email address is already been taken, please try another one.',
+            }[serverResponse.status] || 'Something wrong, please try again later.'}
+          </ServerErrorMessage>
+        )}
+        <form onSubmit={this.handleFormSubmit}>
           {Object.keys(FIELD).map((key) => {
             const { label, type } = FIELD[key];
 
@@ -160,7 +214,12 @@ class SignUpModal extends React.Component {
             );
           })}
           <FormItem>
-            <FullWidthButton variant="success">Sign up</FullWidthButton>
+            <FullWidthButton
+              variant="success"
+              disabled={isServerRequesting}
+            >
+              {isServerRequesting ? 'Signing up...' : 'Sign up'}
+            </FullWidthButton>
           </FormItem>
         </form>
       </Modal>

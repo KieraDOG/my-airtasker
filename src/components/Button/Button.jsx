@@ -53,6 +53,11 @@ const Button = styled.button`
       }
     `,
   }[props.variant])}
+  
+  &:disabled {
+    filter: grayscale(50%);
+    cursor: not-allowed;
+  }
 `;
 
 export default Button;
