@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from './components/Header';
 
@@ -14,16 +14,20 @@ const ContentWrapper = styled.div`
 const FooterWrapper = styled.div`
 `;
 
-const App = () => (
-  <Layout>
-    <Header />
-    <ContentWrapper>
-      Content
-    </ContentWrapper>
-    <FooterWrapper>
-      Footer
-    </FooterWrapper>
-  </Layout>
-);
+const App = () => {
+  const [user, setUser] = useState();
+
+  return (
+    <Layout>
+      <Header user={user} setUser={setUser} />
+      <ContentWrapper>
+        {user && `登陆用户: ${user.email}`}
+      </ContentWrapper>
+      <FooterWrapper>
+        Footer
+      </FooterWrapper>
+    </Layout>
+  );
+};
 
 export default App;

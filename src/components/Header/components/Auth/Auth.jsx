@@ -25,6 +25,9 @@ class Auth extends React.Component {
     this.state = {
       currentShownModal: MODAL.SIGN_UP,
     };
+
+    this.handleCloseCurrentModal = this.handleCloseCurrentModal.bind(this);
+    this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
   }
 
   handleShowCurrentModal(modalToShow) {
@@ -37,18 +40,32 @@ class Auth extends React.Component {
     this.handleShowCurrentModal(MODAL.EMPTY);
   }
 
+  handleLoginSuccess(user) {
+    const { setUser } = this.props;
+
+    this.handleCloseCurrentModal();
+    setUser(user);
+  }
+
   render() {
     const { currentShownModal } = this.state;
+    const { user } = this.props;
 
     return (
       <>
         <Layout>
-          <HeaderItem onClick={() => this.handleShowCurrentModal(MODAL.SIGN_UP)} as={Button} variant="naked">
-            Sign up
-          </HeaderItem>
-          <HeaderItem onClick={() => this.handleShowCurrentModal(MODAL.LOGIN)} as={Button} variant="naked">
-            Log in
-          </HeaderItem>
+          {user ? (
+            <HeaderItem>{user.email}</HeaderItem>
+          ) : (
+            <>
+              <HeaderItem onClick={() => this.handleShowCurrentModal(MODAL.SIGN_UP)} as={Button} variant="naked">
+                Sign up
+              </HeaderItem>
+              <HeaderItem onClick={() => this.handleShowCurrentModal(MODAL.LOGIN)} as={Button} variant="naked">
+                Log in
+              </HeaderItem>
+            </>
+          )}
           <HeaderItem>
             <Button size="sm" variant="secondary">Become a tasker</Button>
           </HeaderItem>
@@ -61,7 +78,8 @@ class Auth extends React.Component {
         )}
         {currentShownModal === MODAL.LOGIN && (
           <LoginModal
-            onClose={() => this.handleCloseCurrentModal()}
+            onClose={this.handleCloseCurrentModal}
+            onSuccess={this.handleLoginSuccess}
             onSignUp={() => this.handleShowCurrentModal(MODAL.SIGN_UP)}
             onForgetPassword={() => this.handleShowCurrentModal(MODAL.FORGET_PASSWORD)}
           />

@@ -55,12 +55,15 @@ const Layout = styled.div`
   margin: auto;
 `;
 
-const Header = () => (
+const Header = ({
+  user,
+  setUser,
+}) => (
   <StyledHeader>
     <Layout>
       <Logo />
       <Navigation />
-      <Auth />
+      <Auth user={user} setUser={setUser} />
     </Layout>
   </StyledHeader>
 );

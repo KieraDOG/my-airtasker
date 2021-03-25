@@ -6,6 +6,10 @@ import Button from '../../../../../Button';
 import Modal from '../../../../../Modal';
 import Input from '../../../../../Input';
 import FormItem from '../../../../../FormItem';
+import ErrorMessage from '../../../../../ErrorMessage';
+import ServerErrorMessage from '../../../../../ServerErrorMessage';
+import withForm from '../../../../../withForm';
+import withAPI from '../../../../../withAPI';
 
 const FullWidthButton = styled(Button)`
   width: 100%;
@@ -14,21 +18,6 @@ const FullWidthButton = styled(Button)`
 const Footer = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const ErrorMessage = styled.div`
-  color: rgb(231, 82, 69);
-  font-size: 12px;
-  margin-top: 8px;
-  font-weight: bold;
-`;
-
-const ServerErrorMessage = styled.div`
-  background: rgb(231, 82, 69);
-  padding: 12px 16px;
-  border-radius: 8px;
-  color: white;
-  margin-bottom: 18px;
 `;
 
 const FIELD = {
@@ -64,167 +53,91 @@ const FIELD = {
   },
 };
 
-class SignUpModal extends React.Component {
-  constructor(props) {
-    super(props);
+const SignUpModal = ({
+  handleDataChange, getError, isFormTouched, handleFormTouch, validateForm,
+  serverResponse, isServerRequesting, callAPI,
+  onClose, onLogin,
+}) => {
+  const error = getError();
 
-    this.state = {
-      data: {
-        email: '',
-        password: '',
-        confirmPassword: '',
-      },
-      isFormTouched: false,
-      isServerRequesting: false,
-      serverResponse: undefined,
-    };
+  return (
+    <Modal
+      onClose={onClose}
+      header="Join us"
+      footer={(
+        <Footer>
+          <div>
+            Already have an account?
+          </div>
+          <Button variant="link" onClick={onLogin}>
+            Log in
+          </Button>
+        </Footer>
+      )}
+    >
+      {serverResponse && (
+        <ServerErrorMessage>
+          {{
+            409: 'Email address is already been taken, please try another one.',
+          }[serverResponse.status] || 'Something wrong, please try again later.'}
+        </ServerErrorMessage>
+      )}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
 
-    this.handleDataChange = this.handleDataChange.bind(this);
-    this.handleFormTouch = this.handleFormTouch.bind(this);
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.handleServerResponse = this.handleServerResponse.bind(this);
-    this.handleServerRequest = this.handleServerRequest.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-  }
+          handleFormTouch();
 
-  getError() {
-    const { data } = this.state;
+          const valid = validateForm();
+          if (!valid) {
+            return;
+          }
 
-    const error = {};
-
-    Object.keys(FIELD).forEach((key) => {
-      const { validations } = FIELD[key];
-      validations.forEach(({ validator, errorMessage }) => {
-        const valid = validator(data);
-
-        if (valid) {
-          return;
-        }
-
-        error[key] = errorMessage;
-      });
-    });
-
-    return error;
-  }
-
-  handleServerResponse(serverResponse) {
-    this.setState({
-      serverResponse,
-    });
-  }
-
-  handleServerRequest(isServerRequesting) {
-    this.setState({
-      isServerRequesting,
-    });
-  }
-
-  handleFormTouch() {
-    this.setState({
-      isFormTouched: true,
-    });
-  }
-
-  handleDataChange(key) {
-    return (event) => {
-      const dataToChange = {
-        [key]: event.target.value,
-      };
-
-      this.setState((prevState) => ({
-        data: {
-          ...prevState.data,
-          ...dataToChange,
-        },
-      }));
-    };
-  }
-
-  validateForm() {
-    const error = this.getError();
-
-    return Object.keys(error).length === 0;
-  }
-
-  handleFormSubmit(event) {
-    const { data } = this.state;
-    const { onClose } = this.props;
-
-    event.preventDefault();
-
-    this.handleFormTouch();
-    this.handleServerResponse();
-
-    const valid = this.validateForm();
-    if (!valid) {
-      return;
-    }
-
-    this.handleServerRequest(true);
-
-    axios
-      .post('http://localhost:8000/auth/sign-up', data)
-      .then(() => onClose())
-      .catch((error) => {
-        this.handleServerRequest(false);
-        this.handleServerResponse(error.response);
-      });
-  }
-
-  render() {
-    const { onClose, onLogin } = this.props;
-    const { isFormTouched, serverResponse, isServerRequesting } = this.state;
-
-    const error = this.getError();
-
-    return (
-      <Modal
-        onClose={onClose}
-        header="Join us"
-        footer={(
-          <Footer>
-            <div>
-              Already have an account?
-            </div>
-            <Button variant="link" onClick={onLogin}>
-              Log in
-            </Button>
-          </Footer>
-        )}
+          callAPI();
+        }}
       >
-        {serverResponse && (
-          <ServerErrorMessage>
-            {{
-              409: 'Email address is already been taken, please try another one.',
-            }[serverResponse.status] || 'Something wrong, please try again later.'}
-          </ServerErrorMessage>
-        )}
-        <form onSubmit={this.handleFormSubmit}>
-          {Object.keys(FIELD).map((key) => {
-            const { label, type } = FIELD[key];
+        {Object.keys(FIELD).map((key) => {
+          const { label, type } = FIELD[key];
 
-            const isFieldOnError = error[key] && isFormTouched;
+          const isFieldOnError = error[key] && isFormTouched;
 
-            return (
-              <FormItem key={key} label={label}>
-                <Input type={type} error={isFieldOnError} onChange={this.handleDataChange(key)} />
-                {isFieldOnError && (<ErrorMessage>{error[key]}</ErrorMessage>)}
-              </FormItem>
-            );
-          })}
-          <FormItem>
-            <FullWidthButton
-              variant="success"
-              disabled={isServerRequesting}
-            >
-              {isServerRequesting ? 'Signing up...' : 'Sign up'}
-            </FullWidthButton>
-          </FormItem>
-        </form>
-      </Modal>
-    );
+          return (
+            <FormItem key={key} label={label}>
+              <Input type={type} error={isFieldOnError} onChange={handleDataChange(key)} />
+              {isFieldOnError && (<ErrorMessage>{error[key]}</ErrorMessage>)}
+            </FormItem>
+          );
+        })}
+        <FormItem>
+          <FullWidthButton
+            variant="success"
+            disabled={isServerRequesting}
+          >
+            {isServerRequesting ? 'Signing up...' : 'Sign up'}
+          </FullWidthButton>
+        </FormItem>
+      </form>
+    </Modal>
+  );
+};
+
+const compose = (...fns) => (initial) => {
+  let result;
+
+  for (let i = fns.length - 1; i >= 0; i--) {
+    const fn = fns[i];
+
+    result = fn(result || initial);
   }
-}
 
-export default SignUpModal;
+  return result;
+};
+
+export default compose(
+  withForm(FIELD),
+  withAPI({
+    callAPI: ({ data }) => axios.post('http://localhost:8000/auth/sign-up', data),
+    onSuccess: ({ onClose }) => onClose(),
+    onError: () => {},
+  }),
+)(SignUpModal);
