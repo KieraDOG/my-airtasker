@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledButton = styled.button`
   outline: 0;
@@ -8,17 +8,31 @@ const StyledButton = styled.button`
   background: transparent;
   cursor: pointer;
 
-  letter-spacing: 0.15px;
   background-color: rgb(224, 68, 109);
-  font-size: 18px;
   color: white;
   border-radius: 160px;
-  padding: 16px 24px;
   font-weight: bold;
+
+  ${(props) => {
+    switch (props.size) {
+      case 'sm':
+        return css`
+          font-size: 14px;
+          padding: 4px 16px;
+        `;
+
+      default:
+        return css`
+          font-size: 18px;
+          padding: 16px 24px;
+        `;
+    }
+  }}
+
 `;
 
-const Button = ({ children }) => (
-  <StyledButton>{children}</StyledButton>
+const Button = ({ children, size }) => (
+  <StyledButton size={size}>{children}</StyledButton>
 );
 
 export default Button;
