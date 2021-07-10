@@ -4,6 +4,7 @@ import Button from '../../components/Button';
 import Modal, { CloseButton } from '../../components/Modal';
 import NakedButton from '../../components/NakedButton';
 import SignUpModal from './components/SignUpModal';
+import LogInModal from './components/LogInModal';
 
 const Wrapper = styled.div`
   margin-bottom: -60px;
@@ -107,17 +108,15 @@ class PageHeader extends React.Component {
             {showModal === 'signUp' && (
               <SignUpModal
                 onClose={this.closeModal}
-                onSignUp={(data) => this.handleUserChange(data)}
               />
             )}
             <Item as={NakedButton} onClick={() => this.handleShowModalChange('logIn')}>
               Log in
             </Item>
             {showModal === 'logIn' && (
-              <Modal onClose={this.closeModal}>
-                <CloseButton onClick={this.closeModal} />
-                Log in
-              </Modal>
+              <LogInModal
+                onClose={this.closeModal}
+              />
             )}
             <Button variant="transparent" size="sm">Become a Tasker</Button>
           </Right>
