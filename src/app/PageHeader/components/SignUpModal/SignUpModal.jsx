@@ -26,10 +26,10 @@ const Error = styled.div`
   letter-spacing: 0.25px;
 `;
 
-const validate = (key, data) => {
-  const value = data[key];
+const validate = (name, data) => {
+  const value = data[name];
 
-  switch (key) {
+  switch (name) {
     case 'email': {
       if (!value) {
         return 'Please input your email';
@@ -46,6 +46,10 @@ const validate = (key, data) => {
     case 'password': {
       if (!value) {
         return 'Please input your password';
+      }
+
+      if (value.toString().length < 8) {
+        return 'Password must be at least 8 characters';
       }
 
       return '';
@@ -68,28 +72,101 @@ const validate = (key, data) => {
   }
 };
 
+const initialData = {
+  value: '',
+  blurred: false,
+  touched: false,
+  focused: false,
+};
+
 class SignUpModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       data: {
-        email: '',
-        password: '',
-        confirmPassword: '',
+        email: initialData,
+        password: initialData,
+        confirmPassword: initialData,
       },
-      error: {},
+      isFormSubmit: false,
+      // 1. 叫什么，2. 什么时候被设置，3. 怎么被使用
     };
 
     this.handleDataChange = this.handleDataChange.bind(this);
-    this.handleErrorChange = this.handleErrorChange.bind(this);
+    this.handleIsFormSubmitChange = this.handleIsFormSubmitChange.bind(this);
+    this.handleBlurredChange = this.handleBlurredChange.bind(this);
+    this.handleFocusedChange = this.handleFocusedChange.bind(this);
   }
 
-  handleErrorChange(key, error) {
+  getErrorMessage(error, name) {
+    const { data, isFormSubmit } = this.state;
+
+    const showInputError = data[name].blurred;
+
+    return (showInputError || isFormSubmit) && error[name];
+  }
+
+  // 衍生状态 Derived State
+  // Context
+  // SignUpModal.validate 这是对 SignUpModal validate
+  // validate 这是单独的 validate
+
+  // 需要一个东西，针对性的去选择什么时候渲染 errorMessage
+  // Dynamic
+  // 这个 input 有没有被输入
+  // 或者 这个表单 有没有被 submit
+
+  // 如果有人和 input 不合法，不应该 submit
+  getError() {
+    const { data } = this.state;
+
+    const error = {};
+
+    Object.keys(data).forEach((name) => {
+      const errorOfName = validate(name, data);
+
+      if (!errorOfName) {
+        return;
+      }
+
+      error[name] = errorOfName;
+    });
+
+    return error;
+  }
+
+  handleIsFormSubmitChange(newIsFormSubmit) {
+    this.setState({
+      isFormSubmit: newIsFormSubmit,
+    });
+  }
+
+  handleFocusedChange(event) {
+    const { name } = event.target;
+
     this.setState((prevState) => ({
-      error: {
-        ...prevState.error,
-        [key]: error,
+      data: {
+        ...prevState.data,
+        [name]: {
+          ...prevState.data[name],
+          focused: true,
+        },
+      },
+    }));
+  }
+
+  handleBlurredChange(event) {
+    const { name } = event.target;
+
+    this.setState((prevState) => ({
+      data: {
+        ...prevState.data,
+        [name]: {
+          ...prevState.data[name],
+          blurred: true,
+          focused: false,
+        },
       },
     }));
   }
@@ -100,19 +177,35 @@ class SignUpModal extends React.Component {
     this.setState((prevState) => ({
       data: {
         ...prevState.data,
-        [name]: value,
+        [name]: {
+          ...prevState.data[name],
+          value,
+          touched: true,
+        },
       },
     }), () => {
-      const { data } = this.state;
-
-      const error = validate(name, data);
-      this.handleErrorChange(name, error);
+      // 基于 data 被设置的结果，设置 error 状态
     });
   }
 
+  // 第一次输入的时候不显示错误
+  // 只有 isFormSubmit 之后才显示错误
+
+  // RMR
+  // SOLID
+
+  // 状态要小要合理要单一职责，反思状态是否可以衍生
+
   render() {
     const { onClose } = this.props;
-    const { data, error } = this.state;
+    const {
+      data, touched, isFormSubmit, blurred,
+    } = this.state;
+
+    const error = this.getError(data);
+
+    // 衍生状态 data -> error -> invalidateForm
+    const hasError = Object.keys(error).length > 0;
 
     return (
       <Modal onClose={onClose}>
@@ -122,40 +215,54 @@ class SignUpModal extends React.Component {
           onSubmit={(event) => {
             event.preventDefault();
 
+            this.handleIsFormSubmitChange(true);
+
+            if (hasError) {
+              console.log('FORM HAS ERROR');
+
+              return;
+            }
+
             console.log('state', this.state);
           }}
         >
           <FormItem label="Email" htmlFor="sign-up-modal-email">
             <Input
               name="email"
-              value={data.email}
+              value={data.email.value}
               onChange={this.handleDataChange}
-              error={error.email}
+              onFocus={this.handleFocusedChange}
+              onBlur={this.handleBlurredChange}
+              error={this.getErrorMessage(error, 'email')}
               id="sign-up-modal-email"
             />
-            <Error>{error.email}</Error>
+            <Error>{this.getErrorMessage(error, 'email')}</Error>
           </FormItem>
           <FormItem label="Password" htmlFor="sign-up-modal-password">
             <Input
               name="password"
-              value={data.password}
+              value={data.password.value}
               onChange={this.handleDataChange}
+              onFocus={this.handleFocusedChange}
+              onBlur={this.handleBlurredChange}
               type="password"
-              error={error.password}
+              error={this.getErrorMessage(error, 'password')}
               id="sign-up-modal-password"
             />
-            <Error>{error.password}</Error>
+            <Error>{this.getErrorMessage(error, 'password')}</Error>
           </FormItem>
           <FormItem label="Confirm password" htmlFor="sign-up-modal-confirm-password">
             <Input
               name="confirmPassword"
-              value={data.confirmPassword}
+              value={data.confirmPassword.value}
               onChange={this.handleDataChange}
+              onFocus={this.handleFocusedChange}
+              onBlur={this.handleBlurredChange}
               type="password"
-              error={error.confirmPassword}
+              error={this.getErrorMessage(error, 'confirmPassword')}
               id="sign-up-modal-confirm-password"
             />
-            <Error>{error.confirmPassword}</Error>
+            <Error>{this.getErrorMessage(error, 'confirmPassword')}</Error>
           </FormItem>
           <SignUpButton size="md" variant="success">
             Join Airtasker
