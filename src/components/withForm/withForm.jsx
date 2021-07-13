@@ -7,10 +7,10 @@ const initialData = {
   focused: false,
 };
 
-function withForm({
+const withForm = ({
   names,
   validate,
-}, Component) {
+}) => (Component) => {
   class Form extends React.Component {
     constructor(props) {
       super(props);

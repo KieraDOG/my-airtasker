@@ -4,7 +4,9 @@ import Button from '../../components/Button';
 import Modal, { CloseButton } from '../../components/Modal';
 import NakedButton from '../../components/NakedButton';
 import SignUpModal from './components/SignUpModal';
-import LogInModal from './components/LogInModal';
+import LogInModal from '../LogInModal';
+import UserContext from '../UserContext';
+import withModal from '../../components/withModal';
 
 const Wrapper = styled.div`
   margin-bottom: -60px;
@@ -52,48 +54,21 @@ const Right = styled.div`
   margin-left: auto;
 `;
 
-class PageHeader extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showModal: undefined,
-      user: undefined,
-    };
-
-    this.handleShowModalChange = this.handleShowModalChange.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.handleUserChange = this.handleUserChange.bind(this);
-  }
-
-  handleShowModalChange(newShowModal) {
-    this.setState({
-      showModal: newShowModal,
-    });
-  }
-
-  handleUserChange(newUser) {
-    this.setState({
-      user: newUser,
-    });
-  }
-
-  closeModal() {
-    this.handleShowModalChange();
-  }
-
-  render() {
-    const { showModal, user } = this.state;
-
-    return (
+const PageHeader = ({
+  showModal,
+  handleShowModalChange,
+  closeModal,
+}) => (
+  <UserContext.Consumer>
+    {({ user, handleUserChange }) => (
       <Wrapper>
         <Container>
           <Left>
             <Logo>My Airtasker</Logo>
-            <Button size="sm" onClick={() => this.handleShowModalChange('postATask')}>Post a task</Button>
+            <Button size="sm" onClick={() => handleShowModalChange('postATask')}>Post a task</Button>
             {showModal === 'postATask' && (
-              <Modal onClose={this.closeModal}>
-                <CloseButton onClick={this.closeModal} />
+              <Modal onClose={closeModal}>
+                <CloseButton onClick={closeModal} />
                 Post a task
               </Modal>
             )}
@@ -102,28 +77,38 @@ class PageHeader extends React.Component {
             <Item as="a">How it works</Item>
           </Left>
           <Right>
-            <Item as={NakedButton} onClick={() => this.handleShowModalChange('signUp')}>
-              Sign up
-            </Item>
-            {showModal === 'signUp' && (
-              <SignUpModal
-                onClose={this.closeModal}
-              />
-            )}
-            <Item as={NakedButton} onClick={() => this.handleShowModalChange('logIn')}>
-              Log in
-            </Item>
-            {showModal === 'logIn' && (
-              <LogInModal
-                onClose={this.closeModal}
-              />
+            {user ? (
+              <Item>{user.email}</Item>
+            ) : (
+              <>
+                <Item as={NakedButton} onClick={() => handleShowModalChange('signUp')}>
+                  Sign up
+                </Item>
+                {showModal === 'signUp' && (
+                  <SignUpModal
+                    onClose={closeModal}
+                  />
+                )}
+                <Item as={NakedButton} onClick={() => handleShowModalChange('logIn')}>
+                  Log in
+                </Item>
+                {showModal === 'logIn' && (
+                  <LogInModal
+                    onClose={closeModal}
+                    onLogIn={(newUser) => {
+                      handleUserChange(newUser);
+                      closeModal();
+                    }}
+                  />
+                )}
+              </>
             )}
             <Button variant="transparent" size="sm">Become a Tasker</Button>
           </Right>
         </Container>
       </Wrapper>
-    );
-  }
-}
+    )}
+  </UserContext.Consumer>
+);
 
-export default PageHeader;
+export default withModal(PageHeader);

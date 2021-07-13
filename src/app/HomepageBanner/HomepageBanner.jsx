@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../../components/Button';
+import withModal from '../../components/withModal';
+import UserContext from '../UserContext';
+import CallToAction from './components/CallToAction';
 
 const Wrapper = styled.div`
   height: calc(100vh - 120px);
@@ -30,7 +32,7 @@ const Sub = styled.p`
   line-height: 40px;
 `;
 
-const HomePageBanner = () => (
+const HomepageBanner = () => (
   <Wrapper>
     <Container>
       <Heading>
@@ -39,11 +41,9 @@ const HomePageBanner = () => (
       <Sub>
         It’s amazing what you can’t do yourself
       </Sub>
-      <p>
-        <Button>Get started now</Button>
-      </p>
+      <CallToAction />
     </Container>
   </Wrapper>
 );
 
-export default HomePageBanner;
+export default withModal(HomepageBanner);

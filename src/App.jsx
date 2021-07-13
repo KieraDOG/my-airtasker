@@ -1,12 +1,13 @@
 import React from 'react';
 import HomepageBanner from './app/HomepageBanner';
 import PageHeader from './app/PageHeader';
+import { UserProvider } from './app/UserContext';
 
 const App = () => (
-  <div>
+  <UserProvider>
     <PageHeader />
     <HomepageBanner />
-  </div>
+  </UserProvider>
 );
 
 export default App;

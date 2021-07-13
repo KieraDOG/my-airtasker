@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../../../../components/Button';
-import ErrorMessage from '../../../../components/ErrorMessage';
-import withForm from '../../../../components/Form';
-import FormItem from '../../../../components/FormItem';
-import Input from '../../../../components/Input';
-import Modal, { CloseButton } from '../../../../components/Modal';
-import validate from './validate';
+import Button from '../../components/Button';
+import ErrorMessage from '../../components/ErrorMessage';
+import FormItem from '../../components/FormItem';
+import Input from '../../components/Input';
+import Modal, { CloseButton } from '../../components/Modal';
+import withLogInForm from '../withLogInForm';
 
 const Wrapper = styled.form`
 `;
@@ -23,6 +22,7 @@ const LogInButton = styled(Button)`
 
 const LoginModal = ({
   onClose,
+  onLogIn,
   data,
   error,
   hasError,
@@ -47,16 +47,19 @@ const LoginModal = ({
           return;
         }
 
-        console.log('state', data);
+        onLogIn({
+          email: data.email.value,
+        });
       }}
     >
       {[
-        { key: 'email', label: 'Email' },
-        { key: 'password', label: 'Password' },
-      ].map(({ key, label }) => (
+        { key: 'email', label: 'Email', type: 'text' },
+        { key: 'password', label: 'Password', type: 'password' },
+      ].map(({ key, label, type }) => (
         <FormItem key={key} label={label} htmlFor={`log-in-modal-${key}`}>
           <Input
             name={key}
+            type={type}
             value={data[key].value}
             onChange={handleDataChange}
             onFocus={handleFocusedChange}
@@ -74,7 +77,4 @@ const LoginModal = ({
   </Modal>
 );
 
-export default withForm({
-  names: ['email', 'password'],
-  validate,
-}, LoginModal);
+export default withLogInForm(LoginModal);
